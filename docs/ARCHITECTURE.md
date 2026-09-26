@@ -1,5 +1,6 @@
 # Phase 1 architecture
 
+> Historical Phase 1 record. Current behavior: [Phase 2 architecture](PHASE2.md) and [Phase 2 verification](PHASE2-VERIFICATION.md).
 ```mermaid
 flowchart LR
   UI[Next.js upload and player] --> API[FastAPI]

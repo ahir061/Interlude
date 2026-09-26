@@ -2,7 +2,7 @@
 
 Context-aware multimodal ad placement & intelligent brand matching for long-form media.
 
-Phase 1 uploads a short Bengali H.264 MP4, detects scene boundaries, transcribes Bengali dialogue, rejects unsafe interruptions, inspects surviving windows with the configured hosted Qwen service, matches synthetic brands and produces auditable JSON. The plain Next.js player pauses source content, plays the selected MP4 creative and resumes at the captured position. Returning **no ad break** is valid.
+Phase 2 uploads a short Bengali H.264 MP4, groups raw shots conservatively, combines ASR/VAD and semantic dialogue safety, carries recent sensitive context, independently verifies eligible brands, and optimizes a global ad schedule. Canonical decisions produce JSON and VMAP. The plain Next.js player pauses source content, plays the selected MP4 creative and resumes at the captured position. Returning **no ad break** is valid.
 
 ## Requirements
 
@@ -72,7 +72,7 @@ cd apps/web && npm run dev
 
 Open **http://localhost:3000**. Choose a short MP4 and click **Analyze**. Upload validates and probes the media, then creates a persisted QUEUED job. The worker performs analysis. The page polls status, shows all decisions and JSON, and loads the playable result. `?video=<id>` reopens a completed analysis. In production mode use `npm run build` followed by `npm run start`.
 
-Docker is optional: `docker compose up --build` uses the same external database and providers. The migrate service runs first. The compose configuration is supplied but requires a Docker engine; it was not executed on the development machine.
+Docker: `docker compose up --build` uses the same external database and providers. Migration runs first; API, worker and web run as non-root users with healthchecks. Named volumes retain container media and reports separately from host development data. Stop with `docker compose down` (without `-v`). Do not run host and container workers together against the same database unless they share identical media paths. See [Phase 2 verification](docs/PHASE2-VERIFICATION.md) for measured results.
 
 ## Sample flow
 
@@ -93,9 +93,10 @@ The smoke script performs a real multipart upload, waits for the persisted job, 
 | Method/path | Behavior |
 | --- | --- |
 | `POST /api/videos` | Multipart field `file`; returns video and queued job (202). |
-| `POST /api/videos/{video_id}/analyze` | Queue re-analysis; reuse an active job. |
+| `POST /api/videos/{video_id}/analyze` | Reuse active/completed analysis; `?force=true` explicitly queues a fresh completed-video analysis. |
 | `GET /api/jobs/{job_id}` | Current state and safe error code/stage. |
 | `GET /api/videos/{video_id}/analysis` | Latest job's canonical analysis manifest. |
+| `GET /api/videos/{video_id}/vmap` | VMAP XML from the same final decisions. |
 | `GET /api/videos/{video_id}/debug` | Completed debug or partial failure/progress data. |
 | `GET /api/videos/{video_id}/media` | Source MP4 with byte-range support. |
 | `GET /api/ads/{brand_id}/{creative_id}` | Generated/provided local creative. |
@@ -118,10 +119,22 @@ npx playwright install chromium
 INTERLUDE_MANIFEST=/absolute/path/to/data/outputs/JOB_ID/analysis.json npm run test:browser
 ```
 
-Unit tests use mocked HTTP only for provider normalization/retry failure scenarios. Real media tests create MP4s with FFmpeg, detect cuts, run CPU Silero and validate playable generated creatives. Browser verification uses the actual accepted manifest, actual served MP4s and a genuine ad-ended event. It writes `browser-evidence.json` and `player.png` next to the manifest. Without `INTERLUDE_MANIFEST`, that browser test is skipped, not claimed passed.
+Provider tests inject HTTP failures for retry/validation cases; policy tests inject explicit semantic fixtures. Live evaluation uses the configured services. Real media tests create MP4s with FFmpeg, detect cuts, run CPU Silero and validate playable generated creatives. Browser verification uses the actual accepted manifest, actual served MP4s and a genuine ad-ended event. It writes `browser-evidence.json` and `player.png` next to the manifest. Without `INTERLUDE_MANIFEST`, that browser test is skipped, not claimed passed.
 
 ## Architecture and limits
 
 See [architecture](docs/ARCHITECTURE.md), [ADRs](docs/DECISIONS.md), and [execution evidence](docs/VERIFICATION.md). The canonical decisions drive both JSON and playback. No ad times are hard-coded. Model confidence and lexical safety mapping are conservative safeguards, not a guarantee of perfect scene understanding.
 
-This is one CPU worker, local filesystem storage and a short-clip duration limit. Audio and inference frames are cleaned; source MP4s remain for the demo and need explicit later retention cleanup. Full-episode ASR chunking, distributed worker heartbeats, multi-user authentication, VMAP and visual polish are outside this first slice.
+The default duration cap remains 300 seconds; full-episode chunking and multi-user authentication remain limitations. Phase 2 includes independent worker heartbeats, VMAP and explicit retention cleanup. UI/visual design is reserved for Phase 3. See [Phase 2 architecture and controls](docs/PHASE2.md).
+
+## Phase 2 evaluation and cleanup
+
+```bash
+uv run python -m interlude.evaluate data/samples/indubala_120s.mp4 data/samples/bhojon_bilashi_120s.mp4 --report-dir reports/local
+# Full episode inputs are excerpted; selection is recorded in the report.
+uv run python -m interlude.evaluate content-sample-assets-folder/indubala_bhaater_hotel.mp4 --clip-start 120 --clip-duration 120
+# Dry-run by default; --apply explicitly deletes only expired eligible media.
+uv run python -m interlude.cleanup
+```
+
+Each accepted breakpoint generates a ±10-second review clip under `reports/inspection/`. Zero-ad runs produce no review clips. Evaluation counts automated policy violations; human ground-truth accuracy requires separate annotation. New safety, memory, ranking, cache and retention settings are listed in `.env.example`.

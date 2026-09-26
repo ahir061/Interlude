@@ -23,3 +23,14 @@ Accepted for Phase 1. A single independent worker polls persisted jobs and claim
 
 ## ADR-008 — JSON before VMAP
 Accepted. Canonical BreakDecision generates analysis and debug JSON. VMAP is deferred until the required real pipeline and browser playback are verified. No second placement model is introduced for serialization.
+
+## Phase 2 superseding decisions
+
+- ADR-001: boundary perception remains filtered, but periodic context monitoring also covers unsafe/no-cut regions so sensitive memory does not depend on ad candidacy.
+- ADR-005: explicit dry-run-first retention cleanup now protects active jobs, ads and audit artifacts. Sources can expire under an operator-applied policy.
+- ADR-007: independent heartbeats and token-owned writes now protect claims. Completed jobs are reused unless force is requested.
+- ADR-008: canonical decisions now generate VMAP and JSON together. There is no independent VMAP placement policy.
+- ADR-009: use strict evidence-backed perception, hard dialogue/semantic gates, eligibility before scoring and independent brand safety confirmation. Unknown means NO AD.
+- ADR-010: deterministic beam search optimizes schedules and actual creative durations. Truncation is explicitly reported as approximation.
+- ADR-011: scene grouping requires affirmative transition evidence. Under-segmentation is an accepted precision tradeoff, exposed in evaluation.
+- ADR-012: validated caches include all semantic inputs and catalog/model/prompt identity; report policy audits separately from human accuracy.

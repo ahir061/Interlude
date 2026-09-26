@@ -22,5 +22,6 @@ data/*
 content-sample-assets-folder/*.mp4
 *.tsbuildinfo
 reports/inspection/
-reports/*.json
-reports/*.md
+reports/**/*.json
+reports/**/*.md
+reports/**/*.xml

@@ -1,5 +1,6 @@
 # Phase 1 execution evidence — 2026-09-26
 
+> Historical Phase 1 record. Current behavior: [Phase 2 architecture](PHASE2.md) and [Phase 2 verification](PHASE2-VERIFICATION.md).
 The actual external-service pipeline and browser insertion path were executed. No fabricated transcripts, semantic outputs or manually inserted break timestamps were used in the live smoke.
 
 ## Final real run

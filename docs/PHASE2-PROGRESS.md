@@ -4,13 +4,13 @@ Base: `ac7facc` (latest `origin/feat/phase1`). Work/push exclusively on `feat/ph
 Requirements: `docs/PROJECT-Spec-PHASE2.md`. Existing player/UI remains unchanged.
 
 ## Milestones
-- [ ] Strict semantic contract, explicit dialogue gates, raw-shot/semantic-scene grouping and sensitive memory.
-- [ ] Validated inference cache, eligibility/ranking separation, independent final brand safety verification.
-- [ ] Global schedule/creative optimizer, normalized decisions, JSON/VMAP parity.
-- [ ] Integrated pipeline instrumentation, evaluation CLI, review clips, adversarial real-media coverage.
-- [ ] MySQL migration, token-owned jobs/heartbeats, idempotent artifacts, startup validation and cleanup.
-- [ ] Docker build/startup and real video processing; existing browser/player regression.
-- [ ] Final evaluation, honest verification/docs and clean pushed branch.
+- [x] Strict semantic contract, explicit dialogue gates, raw-shot/semantic-scene grouping and sensitive memory.
+- [x] Validated inference cache, eligibility/ranking separation, independent final brand safety verification.
+- [x] Global schedule/creative optimizer, normalized decisions, JSON/VMAP parity.
+- [x] Integrated pipeline instrumentation, evaluation CLI, review clips, adversarial real-media coverage.
+- [x] MySQL migration, token-owned jobs/heartbeats, idempotent artifacts, startup validation and cleanup.
+- [x] Docker build/startup and real video processing; existing browser/player regression.
+- [x] Final evaluation, honest verification/docs and clean pushed branch.
 
 ## Decisions
 - Phase 2 extends canonical contracts and keeps legacy analysis readable. Strict new semantic fields are required at the Phase 2 provider boundary; never infer missing safety fields.
@@ -19,3 +19,7 @@ Requirements: `docs/PROJECT-Spec-PHASE2.md`. Existing player/UI remains unchange
 - Global deterministic beam optimization evaluates complete schedules and actual creative durations; bounded beam approximation is disclosed.
 - Evaluation counts detected policy violations, not human ground-truth error rates. Keep this distinction explicit.
 - User-renamed specs are retained on Phase 2. No edits to Phase 1/main refs.
+
+## Review fixes
+- Unresolved affirmative sensitive carryover now persists uncertainty and hard-blocks eligibility.
+- VMAP uses probed creative dimensions; synthetic legacy manifests retain their compatible fallback.
