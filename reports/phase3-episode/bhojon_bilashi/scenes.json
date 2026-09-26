@@ -1,0 +1,1558 @@
+[
+  {
+    "start_sec": 0.0,
+    "end_sec": 1.16,
+    "id": "scene_001",
+    "boundary_score": 0.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0001"
+    ],
+    "grouping_reasons": [
+      "initial_scene"
+    ],
+    "duration_sec": 1.16
+  },
+  {
+    "start_sec": 1.16,
+    "end_sec": 4.88,
+    "id": "scene_002",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0002"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 3.7199999999999998
+  },
+  {
+    "start_sec": 4.88,
+    "end_sec": 15.0,
+    "id": "scene_003",
+    "boundary_score": 0.6965548040444958,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0003"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 10.120000000000001
+  },
+  {
+    "start_sec": 15.0,
+    "end_sec": 47.96,
+    "id": "scene_004",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0004",
+      "shot_0005",
+      "shot_0006",
+      "shot_0007"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 32.96
+  },
+  {
+    "start_sec": 47.96,
+    "end_sec": 49.76,
+    "id": "scene_005",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0008"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 1.7999999999999972
+  },
+  {
+    "start_sec": 49.76,
+    "end_sec": 51.48,
+    "id": "scene_006",
+    "boundary_score": 0.6384719409079218,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0009"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 1.7199999999999989
+  },
+  {
+    "start_sec": 51.48,
+    "end_sec": 53.76,
+    "id": "scene_007",
+    "boundary_score": 0.8655552072616598,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0010"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 2.280000000000001
+  },
+  {
+    "start_sec": 53.76,
+    "end_sec": 58.32,
+    "id": "scene_008",
+    "boundary_score": 0.7833020873521092,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0011",
+      "shot_0012"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 4.560000000000002
+  },
+  {
+    "start_sec": 58.32,
+    "end_sec": 64.2,
+    "id": "scene_009",
+    "boundary_score": 0.7320092806927299,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0013"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 5.880000000000003
+  },
+  {
+    "start_sec": 64.2,
+    "end_sec": 100.72,
+    "id": "scene_010",
+    "boundary_score": 0.7877188893175584,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0014",
+      "shot_0015",
+      "shot_0016",
+      "shot_0017",
+      "shot_0018",
+      "shot_0019",
+      "shot_0020",
+      "shot_0021",
+      "shot_0022",
+      "shot_0023",
+      "shot_0024",
+      "shot_0025"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 36.519999999999996
+  },
+  {
+    "start_sec": 100.72,
+    "end_sec": 173.72,
+    "id": "scene_011",
+    "boundary_score": 0.8377323857060185,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0026",
+      "shot_0027",
+      "shot_0028",
+      "shot_0029",
+      "shot_0030",
+      "shot_0031",
+      "shot_0032",
+      "shot_0033",
+      "shot_0034",
+      "shot_0035",
+      "shot_0036",
+      "shot_0037",
+      "shot_0038",
+      "shot_0039",
+      "shot_0040",
+      "shot_0041"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 73.0
+  },
+  {
+    "start_sec": 173.72,
+    "end_sec": 176.16,
+    "id": "scene_012",
+    "boundary_score": 0.93143683958119,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0042"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 2.4399999999999977
+  },
+  {
+    "start_sec": 176.16,
+    "end_sec": 200.92,
+    "id": "scene_013",
+    "boundary_score": 0.6614476165980796,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0043",
+      "shot_0044",
+      "shot_0045",
+      "shot_0046",
+      "shot_0047",
+      "shot_0048",
+      "shot_0049"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 24.75999999999999
+  },
+  {
+    "start_sec": 200.92,
+    "end_sec": 204.32,
+    "id": "scene_014",
+    "boundary_score": 0.7504634987997256,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0050"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 3.4000000000000057
+  },
+  {
+    "start_sec": 204.32,
+    "end_sec": 206.84,
+    "id": "scene_015",
+    "boundary_score": 0.6931820465213477,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0051"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 2.5200000000000102
+  },
+  {
+    "start_sec": 206.84,
+    "end_sec": 211.88,
+    "id": "scene_016",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0052"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 5.039999999999992
+  },
+  {
+    "start_sec": 211.88,
+    "end_sec": 215.32,
+    "id": "scene_017",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0053"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 3.4399999999999977
+  },
+  {
+    "start_sec": 215.32,
+    "end_sec": 233.6,
+    "id": "scene_018",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0054",
+      "shot_0055",
+      "shot_0056"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 18.28
+  },
+  {
+    "start_sec": 233.6,
+    "end_sec": 260.2,
+    "id": "scene_019",
+    "boundary_score": 0.7791265793788581,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0057",
+      "shot_0058",
+      "shot_0059",
+      "shot_0060",
+      "shot_0061",
+      "shot_0062",
+      "shot_0063"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 26.599999999999994
+  },
+  {
+    "start_sec": 260.2,
+    "end_sec": 265.16,
+    "id": "scene_020",
+    "boundary_score": 0.7646407348465364,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0064",
+      "shot_0065"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 4.960000000000036
+  },
+  {
+    "start_sec": 265.16,
+    "end_sec": 273.28,
+    "id": "scene_021",
+    "boundary_score": 0.9894343037337107,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0066",
+      "shot_0067",
+      "shot_0068"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 8.119999999999948
+  },
+  {
+    "start_sec": 273.28,
+    "end_sec": 276.48,
+    "id": "scene_022",
+    "boundary_score": 0.9585635756923011,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0069"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 3.2000000000000455
+  },
+  {
+    "start_sec": 276.48,
+    "end_sec": 305.16,
+    "id": "scene_023",
+    "boundary_score": 0.7833789464377572,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0070",
+      "shot_0071",
+      "shot_0072",
+      "shot_0073",
+      "shot_0074",
+      "shot_0075",
+      "shot_0076",
+      "shot_0077",
+      "shot_0078",
+      "shot_0079"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 28.680000000000007
+  },
+  {
+    "start_sec": 305.16,
+    "end_sec": 306.76,
+    "id": "scene_024",
+    "boundary_score": 0.8602896063743141,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0080"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 1.599999999999966
+  },
+  {
+    "start_sec": 306.76,
+    "end_sec": 374.08,
+    "id": "scene_025",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0081",
+      "shot_0082",
+      "shot_0083",
+      "shot_0084",
+      "shot_0085",
+      "shot_0086",
+      "shot_0087",
+      "shot_0088",
+      "shot_0089",
+      "shot_0090",
+      "shot_0091",
+      "shot_0092",
+      "shot_0093",
+      "shot_0094",
+      "shot_0095",
+      "shot_0096",
+      "shot_0097"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 67.32
+  },
+  {
+    "start_sec": 374.08,
+    "end_sec": 378.84,
+    "id": "scene_026",
+    "boundary_score": 0.5994318790723595,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0098"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 4.759999999999991
+  },
+  {
+    "start_sec": 378.84,
+    "end_sec": 542.76,
+    "id": "scene_027",
+    "boundary_score": 0.6996688528806584,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0099",
+      "shot_0100",
+      "shot_0101",
+      "shot_0102",
+      "shot_0103",
+      "shot_0104",
+      "shot_0105",
+      "shot_0106",
+      "shot_0107",
+      "shot_0108",
+      "shot_0109",
+      "shot_0110",
+      "shot_0111",
+      "shot_0112",
+      "shot_0113",
+      "shot_0114",
+      "shot_0115",
+      "shot_0116",
+      "shot_0117",
+      "shot_0118",
+      "shot_0119",
+      "shot_0120",
+      "shot_0121",
+      "shot_0122",
+      "shot_0123",
+      "shot_0124",
+      "shot_0125",
+      "shot_0126",
+      "shot_0127",
+      "shot_0128",
+      "shot_0129",
+      "shot_0130",
+      "shot_0131",
+      "shot_0132",
+      "shot_0133",
+      "shot_0134",
+      "shot_0135",
+      "shot_0136",
+      "shot_0137",
+      "shot_0138",
+      "shot_0139",
+      "shot_0140",
+      "shot_0141",
+      "shot_0142",
+      "shot_0143",
+      "shot_0144",
+      "shot_0145",
+      "shot_0146",
+      "shot_0147",
+      "shot_0148",
+      "shot_0149",
+      "shot_0150",
+      "shot_0151",
+      "shot_0152",
+      "shot_0153",
+      "shot_0154",
+      "shot_0155",
+      "shot_0156",
+      "shot_0157",
+      "shot_0158",
+      "shot_0159",
+      "shot_0160",
+      "shot_0161",
+      "shot_0162"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 163.92000000000002
+  },
+  {
+    "start_sec": 542.76,
+    "end_sec": 546.8,
+    "id": "scene_028",
+    "boundary_score": 0.7906105658972051,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0163"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 4.039999999999964
+  },
+  {
+    "start_sec": 546.8,
+    "end_sec": 548.84,
+    "id": "scene_029",
+    "boundary_score": 0.8808434673461077,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0164"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 2.0400000000000773
+  },
+  {
+    "start_sec": 548.84,
+    "end_sec": 549.72,
+    "id": "scene_030",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0165"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 0.8799999999999955
+  },
+  {
+    "start_sec": 549.72,
+    "end_sec": 552.72,
+    "id": "scene_031",
+    "boundary_score": 0.9219923817408264,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0166",
+      "shot_0167"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 3.0
+  },
+  {
+    "start_sec": 552.72,
+    "end_sec": 561.64,
+    "id": "scene_032",
+    "boundary_score": 0.8796786921832132,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0168",
+      "shot_0169",
+      "shot_0170",
+      "shot_0171",
+      "shot_0172"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 8.919999999999959
+  },
+  {
+    "start_sec": 561.64,
+    "end_sec": 563.28,
+    "id": "scene_033",
+    "boundary_score": 0.74642161511917,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0173"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 1.6399999999999864
+  },
+  {
+    "start_sec": 563.28,
+    "end_sec": 564.72,
+    "id": "scene_034",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0174"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 1.4400000000000546
+  },
+  {
+    "start_sec": 564.72,
+    "end_sec": 577.32,
+    "id": "scene_035",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0175",
+      "shot_0176",
+      "shot_0177",
+      "shot_0178",
+      "shot_0179",
+      "shot_0180",
+      "shot_0181",
+      "shot_0182"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 12.600000000000023
+  },
+  {
+    "start_sec": 577.32,
+    "end_sec": 578.84,
+    "id": "scene_036",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0183"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 1.5199999999999818
+  },
+  {
+    "start_sec": 578.84,
+    "end_sec": 581.16,
+    "id": "scene_037",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0184"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 2.3199999999999363
+  },
+  {
+    "start_sec": 581.16,
+    "end_sec": 886.0,
+    "id": "scene_038",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0185",
+      "shot_0186",
+      "shot_0187",
+      "shot_0188",
+      "shot_0189",
+      "shot_0190",
+      "shot_0191",
+      "shot_0192",
+      "shot_0193",
+      "shot_0194",
+      "shot_0195",
+      "shot_0196",
+      "shot_0197",
+      "shot_0198",
+      "shot_0199",
+      "shot_0200",
+      "shot_0201",
+      "shot_0202",
+      "shot_0203",
+      "shot_0204",
+      "shot_0205",
+      "shot_0206",
+      "shot_0207",
+      "shot_0208",
+      "shot_0209",
+      "shot_0210",
+      "shot_0211",
+      "shot_0212",
+      "shot_0213",
+      "shot_0214",
+      "shot_0215",
+      "shot_0216",
+      "shot_0217",
+      "shot_0218",
+      "shot_0219",
+      "shot_0220",
+      "shot_0221",
+      "shot_0222",
+      "shot_0223",
+      "shot_0224",
+      "shot_0225",
+      "shot_0226",
+      "shot_0227",
+      "shot_0228",
+      "shot_0229",
+      "shot_0230",
+      "shot_0231",
+      "shot_0232",
+      "shot_0233",
+      "shot_0234",
+      "shot_0235",
+      "shot_0236",
+      "shot_0237",
+      "shot_0238",
+      "shot_0239",
+      "shot_0240",
+      "shot_0241",
+      "shot_0242",
+      "shot_0243",
+      "shot_0244",
+      "shot_0245",
+      "shot_0246",
+      "shot_0247",
+      "shot_0248",
+      "shot_0249",
+      "shot_0250",
+      "shot_0251",
+      "shot_0252",
+      "shot_0253",
+      "shot_0254",
+      "shot_0255",
+      "shot_0256",
+      "shot_0257",
+      "shot_0258",
+      "shot_0259",
+      "shot_0260",
+      "shot_0261",
+      "shot_0262",
+      "shot_0263",
+      "shot_0264",
+      "shot_0265",
+      "shot_0266",
+      "shot_0267",
+      "shot_0268",
+      "shot_0269",
+      "shot_0270",
+      "shot_0271",
+      "shot_0272",
+      "shot_0273",
+      "shot_0274",
+      "shot_0275",
+      "shot_0276",
+      "shot_0277",
+      "shot_0278",
+      "shot_0279",
+      "shot_0280",
+      "shot_0281",
+      "shot_0282",
+      "shot_0283",
+      "shot_0284",
+      "shot_0285",
+      "shot_0286",
+      "shot_0287",
+      "shot_0288",
+      "shot_0289",
+      "shot_0290",
+      "shot_0291",
+      "shot_0292",
+      "shot_0293",
+      "shot_0294",
+      "shot_0295",
+      "shot_0296",
+      "shot_0297",
+      "shot_0298",
+      "shot_0299",
+      "shot_0300",
+      "shot_0301",
+      "shot_0302",
+      "shot_0303",
+      "shot_0304",
+      "shot_0305"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 304.84000000000003
+  },
+  {
+    "start_sec": 886.0,
+    "end_sec": 890.28,
+    "id": "scene_039",
+    "boundary_score": 0.9253522456918725,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0306"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 4.279999999999973
+  },
+  {
+    "start_sec": 890.28,
+    "end_sec": 891.2,
+    "id": "scene_040",
+    "boundary_score": 0.9682521741576645,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0307"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 0.9200000000000728
+  },
+  {
+    "start_sec": 891.2,
+    "end_sec": 891.88,
+    "id": "scene_041",
+    "boundary_score": 0.5835228855881344,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0308"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 0.67999999999995
+  },
+  {
+    "start_sec": 891.88,
+    "end_sec": 892.8,
+    "id": "scene_042",
+    "boundary_score": 0.7458797501929012,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0309"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 0.9199999999999591
+  },
+  {
+    "start_sec": 892.8,
+    "end_sec": 893.56,
+    "id": "scene_043",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0310"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 0.7599999999999909
+  },
+  {
+    "start_sec": 893.56,
+    "end_sec": 901.68,
+    "id": "scene_044",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0311",
+      "shot_0312",
+      "shot_0313",
+      "shot_0314",
+      "shot_0315",
+      "shot_0316",
+      "shot_0317"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 8.120000000000005
+  },
+  {
+    "start_sec": 901.68,
+    "end_sec": 904.96,
+    "id": "scene_045",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0318",
+      "shot_0319"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 3.2800000000000864
+  },
+  {
+    "start_sec": 904.96,
+    "end_sec": 906.32,
+    "id": "scene_046",
+    "boundary_score": 0.9053796001586076,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0320"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 1.3600000000000136
+  },
+  {
+    "start_sec": 906.32,
+    "end_sec": 908.28,
+    "id": "scene_047",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0321"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 1.9599999999999227
+  },
+  {
+    "start_sec": 908.28,
+    "end_sec": 913.16,
+    "id": "scene_048",
+    "boundary_score": 0.8751398199052642,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0322",
+      "shot_0323"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 4.8799999999999955
+  },
+  {
+    "start_sec": 913.16,
+    "end_sec": 917.0,
+    "id": "scene_049",
+    "boundary_score": 0.9501847632137346,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0324"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 3.840000000000032
+  },
+  {
+    "start_sec": 917.0,
+    "end_sec": 921.64,
+    "id": "scene_050",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0325",
+      "shot_0326",
+      "shot_0327"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 4.639999999999986
+  },
+  {
+    "start_sec": 921.64,
+    "end_sec": 1031.56,
+    "id": "scene_051",
+    "boundary_score": 0.5747701595186042,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0328",
+      "shot_0329",
+      "shot_0330",
+      "shot_0331",
+      "shot_0332",
+      "shot_0333",
+      "shot_0334",
+      "shot_0335",
+      "shot_0336",
+      "shot_0337",
+      "shot_0338",
+      "shot_0339",
+      "shot_0340",
+      "shot_0341",
+      "shot_0342",
+      "shot_0343",
+      "shot_0344",
+      "shot_0345",
+      "shot_0346",
+      "shot_0347",
+      "shot_0348",
+      "shot_0349",
+      "shot_0350",
+      "shot_0351",
+      "shot_0352",
+      "shot_0353",
+      "shot_0354",
+      "shot_0355",
+      "shot_0356",
+      "shot_0357",
+      "shot_0358",
+      "shot_0359",
+      "shot_0360",
+      "shot_0361",
+      "shot_0362",
+      "shot_0363",
+      "shot_0364",
+      "shot_0365",
+      "shot_0366",
+      "shot_0367",
+      "shot_0368",
+      "shot_0369",
+      "shot_0370",
+      "shot_0371",
+      "shot_0372",
+      "shot_0373",
+      "shot_0374",
+      "shot_0375"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "unconfirmed_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 109.91999999999996
+  },
+  {
+    "start_sec": 1031.56,
+    "end_sec": 1033.0,
+    "id": "scene_052",
+    "boundary_score": 0.9399310244127228,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0376"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 1.4400000000000546
+  },
+  {
+    "start_sec": 1033.0,
+    "end_sec": 1033.56,
+    "id": "scene_053",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0377"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 0.5599999999999454
+  },
+  {
+    "start_sec": 1033.56,
+    "end_sec": 1035.0,
+    "id": "scene_054",
+    "boundary_score": 0.5467813960155178,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0378"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 1.4400000000000546
+  },
+  {
+    "start_sec": 1035.0,
+    "end_sec": 1036.08,
+    "id": "scene_055",
+    "boundary_score": 0.5376688220700446,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0379"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 1.0799999999999272
+  },
+  {
+    "start_sec": 1036.08,
+    "end_sec": 1040.96,
+    "id": "scene_056",
+    "boundary_score": 0.5103433240097736,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0380",
+      "shot_0381"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 4.880000000000109
+  },
+  {
+    "start_sec": 1040.96,
+    "end_sec": 1192.32,
+    "id": "scene_057",
+    "boundary_score": 0.5213698398919754,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0382",
+      "shot_0383",
+      "shot_0384",
+      "shot_0385",
+      "shot_0386",
+      "shot_0387",
+      "shot_0388",
+      "shot_0389",
+      "shot_0390",
+      "shot_0391",
+      "shot_0392",
+      "shot_0393",
+      "shot_0394",
+      "shot_0395",
+      "shot_0396",
+      "shot_0397",
+      "shot_0398",
+      "shot_0399",
+      "shot_0400",
+      "shot_0401",
+      "shot_0402",
+      "shot_0403",
+      "shot_0404",
+      "shot_0405",
+      "shot_0406",
+      "shot_0407",
+      "shot_0408",
+      "shot_0409",
+      "shot_0410",
+      "shot_0411",
+      "shot_0412",
+      "shot_0413",
+      "shot_0414",
+      "shot_0415",
+      "shot_0416",
+      "shot_0417",
+      "shot_0418",
+      "shot_0419",
+      "shot_0420",
+      "shot_0421",
+      "shot_0422",
+      "shot_0423",
+      "shot_0424",
+      "shot_0425",
+      "shot_0426",
+      "shot_0427",
+      "shot_0428",
+      "shot_0429"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity",
+      "dialogue_or_visual_continuity"
+    ],
+    "duration_sec": 151.3599999999999
+  },
+  {
+    "start_sec": 1192.32,
+    "end_sec": 1227.36,
+    "id": "scene_058",
+    "boundary_score": 1.0,
+    "representative_frames": [],
+    "shot_ids": [
+      "shot_0430"
+    ],
+    "grouping_reasons": [
+      "confirmed_semantic_transition"
+    ],
+    "duration_sec": 35.039999999999964
+  }
+]

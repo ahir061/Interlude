@@ -1,0 +1,98 @@
+{
+  "schema_version": 2,
+  "runs": [
+    {
+      "source": "content-sample-assets-folder/bhojon_bilashi.mp4",
+      "status": "COMPLETED",
+      "duration_sec": 1227.413333,
+      "raw_shots": 430,
+      "semantic_scenes": 58,
+      "raw_candidates": 429,
+      "dialogue_safety_rejections": 345,
+      "semantic_rejections": 24,
+      "qwen_calls": 446,
+      "cache_hits": 115,
+      "cache_misses": 438,
+      "accepted_breaks": 10,
+      "ads_per_hour": 29.329973067841852,
+      "ad_load_percent": 4.888328844640308,
+      "processing_time_sec": 1215.5190237080096,
+      "stage_timings_sec": {
+        "media_probe": 0.8859160409774631,
+        "shot_detection": 25.898947459005285,
+        "speech_analysis": 0.04089875001227483,
+        "candidate_filtering": 0.5953296250081621,
+        "qwen_semantic_analysis": 3067.5338538688957,
+        "where_scoring": 0.006816912908107042,
+        "brand_matching": 1.2840247928979807,
+        "brand_safety_verification": 178.99041366798338,
+        "semantic_scene_grouping": 0.015290332958102226,
+        "global_optimization": 0.3174918749718927,
+        "inspection_clips": 10.23200616700342,
+        "total_pipeline": 1215.5190237080096
+      },
+      "detected_mid_dialogue_violations": 0,
+      "detected_negative_context_violations": 0,
+      "human_ground_truth": "UNLABELED: detected violations are policy audits, not measured human accuracy",
+      "artifacts": {
+        "analysis": "reports/phase3-episode/bhojon_bilashi/analysis.json",
+        "debug": "reports/phase3-episode/bhojon_bilashi/debug.json",
+        "candidates": "reports/phase3-episode/bhojon_bilashi/candidates.json",
+        "scenes": "reports/phase3-episode/bhojon_bilashi/scenes.json",
+        "vmap": "reports/phase3-episode/bhojon_bilashi/manifest.vmap.xml"
+      },
+      "placements": [
+        {
+          "timestamp_sec": 139.4,
+          "brand": "brand_e",
+          "where_score": 0.6283372281968022
+        },
+        {
+          "timestamp_sec": 176.16,
+          "brand": "brand_d",
+          "where_score": 0.8753619041495199
+        },
+        {
+          "timestamp_sec": 215.32,
+          "brand": "brand_e",
+          "where_score": 0.91225
+        },
+        {
+          "timestamp_sec": 456.04,
+          "brand": "brand_d",
+          "where_score": 0.5537965709126367
+        },
+        {
+          "timestamp_sec": 513.28,
+          "brand": "brand_f",
+          "where_score": 0.5842865300015001
+        },
+        {
+          "timestamp_sec": 548.84,
+          "brand": "brand_a",
+          "where_score": 0.74825
+        },
+        {
+          "timestamp_sec": 578.84,
+          "brand": "brand_a",
+          "where_score": 0.7642499999999997
+        },
+        {
+          "timestamp_sec": 904.96,
+          "brand": "brand_a",
+          "where_score": 0.7365949000396523
+        },
+        {
+          "timestamp_sec": 1119.36,
+          "brand": "brand_a",
+          "where_score": 0.5537425910520581
+        },
+        {
+          "timestamp_sec": 1167.88,
+          "brand": "brand_a",
+          "where_score": 0.5842499999999996
+        }
+      ]
+    }
+  ]
+}

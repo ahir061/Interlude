@@ -1,0 +1,12 @@
+{
+  "video_id": "103137b6-f0f3-4462-b5a7-d57d8042be8b",
+  "candidate_id": "candidate_008",
+  "brand_id": "brand_d",
+  "boundary_sec": 25.16,
+  "paused_at_sec": 25.212147,
+  "captured_resume_sec": 25.212,
+  "resumed_at_sec": 25.367365,
+  "actual_ad_playback": true,
+  "replay_prevented": true,
+  "passed": true
+}

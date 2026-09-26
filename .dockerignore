@@ -1,0 +1,11 @@
+.env
+.env.*
+.git
+.venv
+.cache
+data
+reports
+content-sample-assets-folder/*.mp4
+**/node_modules
+**/.next
+**/__pycache__

@@ -1,0 +1,1871 @@
+{
+  "video": {
+    "id": "calibration_bhojon_bilashi",
+    "duration_sec": 1227.413333,
+    "width": 960,
+    "height": 540,
+    "frame_rate": 25.0,
+    "codec": "h264",
+    "has_audio": true,
+    "source_url": "/api/videos/calibration_bhojon_bilashi/media"
+  },
+  "summary": {
+    "scene_count": 58,
+    "candidate_count": 429,
+    "raw_shot_count": 430,
+    "prefilter_rejected_count": 345,
+    "semantic_candidates_analyzed": 84,
+    "semantic_candidates_attempted": 84,
+    "accepted_break_count": 10
+  },
+  "ad_breaks": [
+    {
+      "candidate_id": "candidate_036",
+      "timestamp_sec": 139.4,
+      "latest_start_sec": 139.65,
+      "brand_id": "brand_e",
+      "creative_id": "e_20s_bn",
+      "creative_url": "/api/ads/brand_e/e_20s_bn",
+      "duration_sec": 6.0,
+      "where": {
+        "score": 0.6283372281968022,
+        "components": {
+          "visual": 0.9283489127872087,
+          "dialogue_gap": 1.0,
+          "semantic_transition": 0.1,
+          "narrative_closure": 0.15,
+          "shot_stability": 1,
+          "confidence": 0.925
+        },
+        "weights": {
+          "visual": 0.25,
+          "dialogue_gap": 0.2,
+          "semantic_transition": 0.2,
+          "narrative_closure": 0.2,
+          "shot_stability": 0.1,
+          "confidence": 0.05
+        },
+        "dialogue_safe": true,
+        "confirmed_semantic_boundary": false,
+        "nearby_gap_sec": 1.0,
+        "quality_floor": 0.55,
+        "survival_reasons": [
+          "no_exact_speech_crossing",
+          "quality_signals_combined"
+        ],
+        "narrative_closure": "ongoing",
+        "dialogue_continuity": "continuing",
+        "hard_gates_passed": true,
+        "rank": 37
+      },
+      "whether": {
+        "pass": true,
+        "reasons": [],
+        "projected_ad_load_percent": 4.888328844640308,
+        "ad_duration_sec": 6.0,
+        "limits": {
+          "min_break_gap_sec": 30.0,
+          "max_breaks_per_hour": 12,
+          "max_ad_load_percent": 10.0
+        },
+        "selection_reason": "global_schedule_quality"
+      },
+      "what": {
+        "score": 0.21125,
+        "brand_matches": [],
+        "brands": [
+          {
+            "brand_id": "brand_e",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.21125,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.6666666666666666,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_a",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0975,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 1.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_c",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_d",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_f",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_g",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_h",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_b",
+            "eligible": false,
+            "hard_blocks": [
+              "eating"
+            ],
+            "score": null,
+            "components": {}
+          }
+        ],
+        "safety_verification": [
+          {
+            "brand_id": "brand_e",
+            "verdict": "SAFE",
+            "confidence": 0.95,
+            "conflicts": [],
+            "evidence": [
+              {
+                "timestamp_sec": 134.4,
+                "observation": "A man is standing next to a red vehicle, reading a paper and gesturing. The setting is a street with no signs of violence, injury, or emergency."
+              },
+              {
+                "timestamp_sec": 139.4,
+                "observation": "The camera angle widens to reveal the vehicle is a food truck. The man continues to speak and gesture. The environment is a calm street with a wall and trees in the background."
+              },
+              {
+                "timestamp_sec": 144.4,
+                "observation": "The man is looking at the paper in his hands. The scene remains neutral and conversational, with no sensitive contexts present."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate_042",
+      "timestamp_sec": 176.16,
+      "latest_start_sec": 176.41,
+      "brand_id": "brand_d",
+      "creative_id": "d_20s_bn",
+      "creative_url": "/api/ads/brand_d/d_20s_bn",
+      "duration_sec": 6.0,
+      "where": {
+        "score": 0.8753619041495199,
+        "components": {
+          "visual": 0.6614476165980796,
+          "dialogue_gap": 1.0,
+          "semantic_transition": 1,
+          "narrative_closure": 1.0,
+          "shot_stability": 0.6099999999999994,
+          "confidence": 0.98
+        },
+        "weights": {
+          "visual": 0.25,
+          "dialogue_gap": 0.2,
+          "semantic_transition": 0.2,
+          "narrative_closure": 0.2,
+          "shot_stability": 0.1,
+          "confidence": 0.05
+        },
+        "dialogue_safe": true,
+        "confirmed_semantic_boundary": true,
+        "nearby_gap_sec": 41.58000000000001,
+        "quality_floor": 0.55,
+        "survival_reasons": [
+          "no_exact_speech_crossing",
+          "quality_signals_combined"
+        ],
+        "narrative_closure": "scene_concluding",
+        "dialogue_continuity": "completed",
+        "hard_gates_passed": true,
+        "rank": 4
+      },
+      "whether": {
+        "pass": true,
+        "reasons": [],
+        "projected_ad_load_percent": 4.888328844640308,
+        "ad_duration_sec": 6.0,
+        "limits": {
+          "min_break_gap_sec": 30.0,
+          "max_breaks_per_hour": 12,
+          "max_ad_load_percent": 10.0
+        },
+        "selection_reason": "global_schedule_quality"
+      },
+      "what": {
+        "score": 0.132,
+        "brand_matches": [],
+        "brands": [
+          {
+            "brand_id": "brand_d",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.132,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.3333333333333333,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.99
+            }
+          },
+          {
+            "brand_id": "brand_e",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.132,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.3333333333333333,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.99
+            }
+          },
+          {
+            "brand_id": "brand_g",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.132,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.3333333333333333,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.99
+            }
+          },
+          {
+            "brand_id": "brand_a",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.99
+            }
+          },
+          {
+            "brand_id": "brand_c",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.99
+            }
+          },
+          {
+            "brand_id": "brand_f",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.99
+            }
+          },
+          {
+            "brand_id": "brand_h",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.99
+            }
+          },
+          {
+            "brand_id": "brand_b",
+            "eligible": false,
+            "hard_blocks": [
+              "eating"
+            ],
+            "score": null,
+            "components": {}
+          }
+        ],
+        "safety_verification": [
+          {
+            "brand_id": "brand_d",
+            "verdict": "SAFE",
+            "confidence": 0.98,
+            "conflicts": [],
+            "evidence": [
+              {
+                "timestamp_sec": 171.16,
+                "observation": "A man is standing in front of a red food truck, speaking and gesturing with a paper in hand. The setting is a street with a food truck, which is a neutral, commercial context."
+              },
+              {
+                "timestamp_sec": 174.16,
+                "observation": "The scene transitions to an aerial view of a city and river. This is a scenic establishing shot with no visible signs of distress, emergency, or violence."
+              },
+              {
+                "timestamp_sec": 177.16,
+                "observation": "An aerial shot of a church is shown with the text 'A HOICHOI ORIGINAL SERIES'. The visual is a standard architectural view, not depicting a funeral or religious ceremony involving grief."
+              },
+              {
+                "timestamp_sec": 181.16,
+                "observation": "An aerial shot of a temple is shown with the text 'HOST SOMAK GHOSH'. The scene is a calm, scenic view of a religious building, not a medical or violent context."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate_053",
+      "timestamp_sec": 215.32,
+      "latest_start_sec": 215.57,
+      "brand_id": "brand_e",
+      "creative_id": "e_20s_bn",
+      "creative_url": "/api/ads/brand_e/e_20s_bn",
+      "duration_sec": 6.0,
+      "where": {
+        "score": 0.91225,
+        "components": {
+          "visual": 1.0,
+          "dialogue_gap": 1.0,
+          "semantic_transition": 1,
+          "narrative_closure": 0.65,
+          "shot_stability": 0.8599999999999994,
+          "confidence": 0.925
+        },
+        "weights": {
+          "visual": 0.25,
+          "dialogue_gap": 0.2,
+          "semantic_transition": 0.2,
+          "narrative_closure": 0.2,
+          "shot_stability": 0.1,
+          "confidence": 0.05
+        },
+        "dialogue_safe": true,
+        "confirmed_semantic_boundary": true,
+        "nearby_gap_sec": 41.58000000000001,
+        "quality_floor": 0.55,
+        "survival_reasons": [
+          "no_exact_speech_crossing",
+          "quality_signals_combined"
+        ],
+        "narrative_closure": "ongoing",
+        "dialogue_continuity": "no_dialogue",
+        "hard_gates_passed": true,
+        "rank": 2
+      },
+      "whether": {
+        "pass": true,
+        "reasons": [],
+        "projected_ad_load_percent": 4.888328844640308,
+        "ad_duration_sec": 6.0,
+        "limits": {
+          "min_break_gap_sec": 30.0,
+          "max_breaks_per_hour": 12,
+          "max_ad_load_percent": 10.0
+        },
+        "selection_reason": "global_schedule_quality"
+      },
+      "what": {
+        "score": 0.79625,
+        "brand_matches": [],
+        "brands": [
+          {
+            "brand_id": "brand_e",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.79625,
+            "components": {
+              "dominant_activity": 1.0,
+              "target_overlap": 0.6666666666666666,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_h",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.7150000000000001,
+            "components": {
+              "dominant_activity": 1.0,
+              "target_overlap": 0.3333333333333333,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_a",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_b",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_c",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_d",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_f",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_g",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          }
+        ],
+        "safety_verification": [
+          {
+            "brand_id": "brand_e",
+            "verdict": "SAFE",
+            "confidence": 0.95,
+            "conflicts": [],
+            "evidence": [
+              {
+                "timestamp_sec": 210.32,
+                "observation": "Title card for 'Bhagya Biplabi Season 2' is displayed with a calm, neutral background."
+              },
+              {
+                "timestamp_sec": 212.32,
+                "observation": "Establishing shot of a colonial-style building (St. George's College) with no signs of distress or emergency."
+              },
+              {
+                "timestamp_sec": 215.32,
+                "observation": "A man is seen inside a red delivery truck, appearing calm and relaxed."
+              },
+              {
+                "timestamp_sec": 216.32,
+                "observation": "The man exits the truck in a leisurely manner, walking away from the vehicle."
+              },
+              {
+                "timestamp_sec": 220.32,
+                "observation": "The man is walking on the street with a neutral expression; no injuries, accidents, or sensitive events are visible."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate_125",
+      "timestamp_sec": 456.04,
+      "latest_start_sec": 456.29,
+      "brand_id": "brand_d",
+      "creative_id": "d_20s_bn",
+      "creative_url": "/api/ads/brand_d/d_20s_bn",
+      "duration_sec": 6.0,
+      "where": {
+        "score": 0.5537965709126367,
+        "components": {
+          "visual": 0.8901862836505486,
+          "dialogue_gap": 1.0,
+          "semantic_transition": 0.1,
+          "narrative_closure": 0.15,
+          "shot_stability": 0.3499999999999943,
+          "confidence": 0.925
+        },
+        "weights": {
+          "visual": 0.25,
+          "dialogue_gap": 0.2,
+          "semantic_transition": 0.2,
+          "narrative_closure": 0.2,
+          "shot_stability": 0.1,
+          "confidence": 0.05
+        },
+        "dialogue_safe": true,
+        "confirmed_semantic_boundary": false,
+        "nearby_gap_sec": 3.5,
+        "quality_floor": 0.55,
+        "survival_reasons": [
+          "no_exact_speech_crossing",
+          "quality_signals_combined"
+        ],
+        "narrative_closure": "ongoing",
+        "dialogue_continuity": "continuing",
+        "hard_gates_passed": true,
+        "rank": 58
+      },
+      "whether": {
+        "pass": true,
+        "reasons": [],
+        "projected_ad_load_percent": 4.888328844640308,
+        "ad_duration_sec": 6.0,
+        "limits": {
+          "min_break_gap_sec": 30.0,
+          "max_breaks_per_hour": 12,
+          "max_ad_load_percent": 10.0
+        },
+        "selection_reason": "global_schedule_quality"
+      },
+      "what": {
+        "score": 0.13,
+        "brand_matches": [],
+        "brands": [
+          {
+            "brand_id": "brand_d",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.13,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.3333333333333333,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_a",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0975,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 1.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_c",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_e",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_f",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_g",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_h",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_b",
+            "eligible": false,
+            "hard_blocks": [
+              "eating"
+            ],
+            "score": null,
+            "components": {}
+          }
+        ],
+        "safety_verification": [
+          {
+            "brand_id": "brand_d",
+            "verdict": "SAFE",
+            "confidence": 0.95,
+            "conflicts": [],
+            "evidence": [
+              {
+                "timestamp_sec": 451.04,
+                "observation": "The scene depicts a casual conversation at an outdoor food stall with a chef and a couple. The mood is neutral and conversational, with no visual indicators of distress, medical issues, or violence."
+              },
+              {
+                "timestamp_sec": 455.04,
+                "observation": "A wide shot shows the food truck parked in a public area in front of a large building. The environment is bright and open, consistent with a daytime social setting."
+              },
+              {
+                "timestamp_sec": 458.04,
+                "observation": "The characters are interacting normally at a table. The dialogue in the transcript discusses food preparation ('ranna korte aye?') and general conversation, confirming a benign context."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate_152",
+      "timestamp_sec": 513.28,
+      "latest_start_sec": 513.53,
+      "brand_id": "brand_f",
+      "creative_id": "f_15s_bn",
+      "creative_url": "/api/ads/brand_f/f_15s_bn",
+      "duration_sec": 6.0,
+      "where": {
+        "score": 0.5842865300015001,
+        "components": {
+          "visual": 0.8321461200060014,
+          "dialogue_gap": 1.0,
+          "semantic_transition": 0.1,
+          "narrative_closure": 0.15,
+          "shot_stability": 0.7999999999999972,
+          "confidence": 0.925
+        },
+        "weights": {
+          "visual": 0.25,
+          "dialogue_gap": 0.2,
+          "semantic_transition": 0.2,
+          "narrative_closure": 0.2,
+          "shot_stability": 0.1,
+          "confidence": 0.05
+        },
+        "dialogue_safe": true,
+        "confirmed_semantic_boundary": false,
+        "nearby_gap_sec": 2.6000000000000227,
+        "quality_floor": 0.55,
+        "survival_reasons": [
+          "no_exact_speech_crossing",
+          "quality_signals_combined"
+        ],
+        "narrative_closure": "ongoing",
+        "dialogue_continuity": "continuing",
+        "hard_gates_passed": true,
+        "rank": 46
+      },
+      "whether": {
+        "pass": true,
+        "reasons": [],
+        "projected_ad_load_percent": 4.888328844640308,
+        "ad_duration_sec": 6.0,
+        "limits": {
+          "min_break_gap_sec": 30.0,
+          "max_breaks_per_hour": 12,
+          "max_ad_load_percent": 10.0
+        },
+        "selection_reason": "global_schedule_quality"
+      },
+      "what": {
+        "score": 0.7150000000000001,
+        "brand_matches": [],
+        "brands": [
+          {
+            "brand_id": "brand_f",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.7150000000000001,
+            "components": {
+              "dominant_activity": 1.0,
+              "target_overlap": 0.3333333333333333,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_h",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.7150000000000001,
+            "components": {
+              "dominant_activity": 1.0,
+              "target_overlap": 0.3333333333333333,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_a",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.13,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.3333333333333333,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_d",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.13,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.3333333333333333,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_c",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_e",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_g",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_b",
+            "eligible": false,
+            "hard_blocks": [
+              "eating"
+            ],
+            "score": null,
+            "components": {}
+          }
+        ],
+        "safety_verification": [
+          {
+            "brand_id": "brand_f",
+            "verdict": "SAFE",
+            "confidence": 0.95,
+            "conflicts": [],
+            "evidence": [
+              {
+                "timestamp_sec": 509.28,
+                "observation": "Wide shot shows a casual outdoor setting with a red food truck and a large white building, with no visual indicators of violence, hospitals, or funerals."
+              },
+              {
+                "timestamp_sec": 511.28,
+                "observation": "The man is holding up a packet of 'Sunrise Jeera Powder' to the woman, indicating a shopping or product selection activity."
+              },
+              {
+                "timestamp_sec": 513.28,
+                "observation": "The man hands the spice packet to the woman; both characters appear relaxed and engaged in a friendly conversation."
+              },
+              {
+                "timestamp_sec": 517.28,
+                "observation": "The woman is gesturing while speaking to the man, who is listening attentively; the mood remains casual and positive."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate_164",
+      "timestamp_sec": 548.84,
+      "latest_start_sec": 549.09,
+      "brand_id": "brand_a",
+      "creative_id": "a_15s_bn",
+      "creative_url": "/api/ads/brand_a/a_15s_bn",
+      "duration_sec": 6.0,
+      "where": {
+        "score": 0.74825,
+        "components": {
+          "visual": 1.0,
+          "dialogue_gap": 1.0,
+          "semantic_transition": 1,
+          "narrative_closure": 0.15,
+          "shot_stability": 0.21999999999999886,
+          "confidence": 0.925
+        },
+        "weights": {
+          "visual": 0.25,
+          "dialogue_gap": 0.2,
+          "semantic_transition": 0.2,
+          "narrative_closure": 0.2,
+          "shot_stability": 0.1,
+          "confidence": 0.05
+        },
+        "dialogue_safe": true,
+        "confirmed_semantic_boundary": true,
+        "nearby_gap_sec": 4.0,
+        "quality_floor": 0.55,
+        "survival_reasons": [
+          "no_exact_speech_crossing",
+          "quality_signals_combined"
+        ],
+        "narrative_closure": "ongoing",
+        "dialogue_continuity": "continuing",
+        "hard_gates_passed": true,
+        "rank": 14
+      },
+      "whether": {
+        "pass": true,
+        "reasons": [],
+        "projected_ad_load_percent": 4.888328844640308,
+        "ad_duration_sec": 6.0,
+        "limits": {
+          "min_break_gap_sec": 30.0,
+          "max_breaks_per_hour": 12,
+          "max_ad_load_percent": 10.0
+        },
+        "selection_reason": "global_schedule_quality"
+      },
+      "what": {
+        "score": 0.975,
+        "brand_matches": [],
+        "brands": [
+          {
+            "brand_id": "brand_a",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.975,
+            "components": {
+              "dominant_activity": 1.0,
+              "target_overlap": 1.0,
+              "category_relevance": 1.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_b",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_c",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_d",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_e",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_f",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_g",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_h",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          }
+        ],
+        "safety_verification": [
+          {
+            "brand_id": "brand_a",
+            "verdict": "SAFE",
+            "confidence": 0.95,
+            "conflicts": [],
+            "evidence": [
+              {
+                "timestamp_sec": 543.84,
+                "observation": "A woman is seated outdoors speaking to the camera with spice boxes on the table, indicating a cooking or food-related segment."
+              },
+              {
+                "timestamp_sec": 546.84,
+                "observation": "The scene transitions to a split screen showing a chef in a kitchen and close-ups of food preparation, confirming a culinary context."
+              },
+              {
+                "timestamp_sec": 548.84,
+                "observation": "Close-up of scissors cutting fresh coriander leaves, a standard cooking action with no negative connotations."
+              },
+              {
+                "timestamp_sec": 549.84,
+                "observation": "Close-up of spice boxes and fresh green chilies on a counter, reinforcing the food preparation theme."
+              },
+              {
+                "timestamp_sec": 551.84,
+                "observation": "A chef is shown pouring oil into a bowl, a routine cooking step."
+              },
+              {
+                "timestamp_sec": 552.84,
+                "observation": "The scene cuts back to the woman speaking outdoors, maintaining the instructional and neutral mood."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate_183",
+      "timestamp_sec": 578.84,
+      "latest_start_sec": 579.09,
+      "brand_id": "brand_a",
+      "creative_id": "a_15s_bn",
+      "creative_url": "/api/ads/brand_a/a_15s_bn",
+      "duration_sec": 6.0,
+      "where": {
+        "score": 0.7642499999999997,
+        "components": {
+          "visual": 1.0,
+          "dialogue_gap": 1.0,
+          "semantic_transition": 1,
+          "narrative_closure": 0.15,
+          "shot_stability": 0.37999999999999545,
+          "confidence": 0.925
+        },
+        "weights": {
+          "visual": 0.25,
+          "dialogue_gap": 0.2,
+          "semantic_transition": 0.2,
+          "narrative_closure": 0.2,
+          "shot_stability": 0.1,
+          "confidence": 0.05
+        },
+        "dialogue_safe": true,
+        "confirmed_semantic_boundary": true,
+        "nearby_gap_sec": 18.899999999999977,
+        "quality_floor": 0.55,
+        "survival_reasons": [
+          "no_exact_speech_crossing",
+          "quality_signals_combined"
+        ],
+        "narrative_closure": "ongoing",
+        "dialogue_continuity": "continuing",
+        "hard_gates_passed": true,
+        "rank": 11
+      },
+      "whether": {
+        "pass": true,
+        "reasons": [],
+        "projected_ad_load_percent": 4.888328844640308,
+        "ad_duration_sec": 6.0,
+        "limits": {
+          "min_break_gap_sec": 30.0,
+          "max_breaks_per_hour": 12,
+          "max_ad_load_percent": 10.0
+        },
+        "selection_reason": "global_schedule_quality"
+      },
+      "what": {
+        "score": 0.8937499999999999,
+        "brand_matches": [],
+        "brands": [
+          {
+            "brand_id": "brand_a",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.8937499999999999,
+            "components": {
+              "dominant_activity": 1.0,
+              "target_overlap": 0.6666666666666666,
+              "category_relevance": 1.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_d",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.13,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.3333333333333333,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_b",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_c",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_e",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_f",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_g",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_h",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          }
+        ],
+        "safety_verification": [
+          {
+            "brand_id": "brand_a",
+            "verdict": "SAFE",
+            "confidence": 0.95,
+            "conflicts": [],
+            "evidence": [
+              {
+                "timestamp_sec": 573.84,
+                "observation": "Close-up of hands in black gloves preparing food by wrapping ingredients in a leaf, indicating a cooking context."
+              },
+              {
+                "timestamp_sec": 577.84,
+                "observation": "Chef is shown working inside a food truck kitchen, maintaining a calm and professional atmosphere."
+              },
+              {
+                "timestamp_sec": 581.84,
+                "observation": "Scene transitions to a college campus where a couple is sitting at a table near the food truck, discussing the location in a casual manner."
+              },
+              {
+                "timestamp_sec": 581.0,
+                "observation": "Transcript confirms the dialogue is about the beauty of the college campus ('সুন্দর কলেজ কেমপসে'), with no mention of sensitive topics like illness, violence, or grief."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate_319",
+      "timestamp_sec": 904.96,
+      "latest_start_sec": 905.21,
+      "brand_id": "brand_a",
+      "creative_id": "a_15s_bn",
+      "creative_url": "/api/ads/brand_a/a_15s_bn",
+      "duration_sec": 6.0,
+      "where": {
+        "score": 0.7365949000396523,
+        "components": {
+          "visual": 0.9053796001586076,
+          "dialogue_gap": 1.0,
+          "semantic_transition": 1,
+          "narrative_closure": 0.15,
+          "shot_stability": 0.3400000000000034,
+          "confidence": 0.925
+        },
+        "weights": {
+          "visual": 0.25,
+          "dialogue_gap": 0.2,
+          "semantic_transition": 0.2,
+          "narrative_closure": 0.2,
+          "shot_stability": 0.1,
+          "confidence": 0.05
+        },
+        "dialogue_safe": true,
+        "confirmed_semantic_boundary": true,
+        "nearby_gap_sec": 1.3000000000000682,
+        "quality_floor": 0.55,
+        "survival_reasons": [
+          "no_exact_speech_crossing",
+          "quality_signals_combined"
+        ],
+        "narrative_closure": "ongoing",
+        "dialogue_continuity": "continuing",
+        "hard_gates_passed": true,
+        "rank": 15
+      },
+      "whether": {
+        "pass": true,
+        "reasons": [],
+        "projected_ad_load_percent": 4.888328844640308,
+        "ad_duration_sec": 6.0,
+        "limits": {
+          "min_break_gap_sec": 30.0,
+          "max_breaks_per_hour": 12,
+          "max_ad_load_percent": 10.0
+        },
+        "selection_reason": "global_schedule_quality"
+      },
+      "what": {
+        "score": 0.975,
+        "brand_matches": [],
+        "brands": [
+          {
+            "brand_id": "brand_a",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.975,
+            "components": {
+              "dominant_activity": 1.0,
+              "target_overlap": 1.0,
+              "category_relevance": 1.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_c",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_d",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_e",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_f",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_g",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_h",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_b",
+            "eligible": false,
+            "hard_blocks": [
+              "eating"
+            ],
+            "score": null,
+            "components": {}
+          }
+        ],
+        "safety_verification": [
+          {
+            "brand_id": "brand_a",
+            "verdict": "SAFE",
+            "confidence": 0.95,
+            "conflicts": [],
+            "evidence": [
+              {
+                "timestamp_sec": 899.96,
+                "observation": "Close-up of meat being cooked in a pan with spices, indicating a food preparation context."
+              },
+              {
+                "timestamp_sec": 901.96,
+                "observation": "Display of Sunrise spice boxes (Kali Mirch, Shahi Garam Masala, Meat Masala) on a grassy surface, clearly a product showcase."
+              },
+              {
+                "timestamp_sec": 906.96,
+                "observation": "A woman in a pink sari sitting at a table outdoors discussing the products, with a casual and informative demeanor."
+              },
+              {
+                "timestamp_sec": 908.96,
+                "observation": "A man in a green shirt listening and responding, maintaining a conversational and positive atmosphere."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate_405",
+      "timestamp_sec": 1119.36,
+      "latest_start_sec": 1119.4299999999998,
+      "brand_id": "brand_a",
+      "creative_id": "a_15s_bn",
+      "creative_url": "/api/ads/brand_a/a_15s_bn",
+      "duration_sec": 6.0,
+      "where": {
+        "score": 0.5537425910520581,
+        "components": {
+          "visual": 0.9379703642082476,
+          "dialogue_gap": 1.0,
+          "semantic_transition": 0.1,
+          "narrative_closure": 0.15,
+          "shot_stability": 0.22999999999996135,
+          "confidence": 0.925
+        },
+        "weights": {
+          "visual": 0.25,
+          "dialogue_gap": 0.2,
+          "semantic_transition": 0.2,
+          "narrative_closure": 0.2,
+          "shot_stability": 0.1,
+          "confidence": 0.05
+        },
+        "dialogue_safe": true,
+        "confirmed_semantic_boundary": false,
+        "nearby_gap_sec": 1.0,
+        "quality_floor": 0.55,
+        "survival_reasons": [
+          "no_exact_speech_crossing",
+          "quality_signals_combined"
+        ],
+        "narrative_closure": "ongoing",
+        "dialogue_continuity": "continuing",
+        "hard_gates_passed": true,
+        "rank": 59
+      },
+      "whether": {
+        "pass": true,
+        "reasons": [],
+        "projected_ad_load_percent": 4.888328844640308,
+        "ad_duration_sec": 6.0,
+        "limits": {
+          "min_break_gap_sec": 30.0,
+          "max_breaks_per_hour": 12,
+          "max_ad_load_percent": 10.0
+        },
+        "selection_reason": "global_schedule_quality"
+      },
+      "what": {
+        "score": 0.7150000000000001,
+        "brand_matches": [],
+        "brands": [
+          {
+            "brand_id": "brand_a",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.7150000000000001,
+            "components": {
+              "dominant_activity": 1.0,
+              "target_overlap": 0.3333333333333333,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_d",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.13,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.3333333333333333,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_c",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_e",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_f",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_g",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_h",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_b",
+            "eligible": false,
+            "hard_blocks": [
+              "eating"
+            ],
+            "score": null,
+            "components": {}
+          }
+        ],
+        "safety_verification": [
+          {
+            "brand_id": "brand_a",
+            "verdict": "SAFE",
+            "confidence": 0.95,
+            "conflicts": [],
+            "evidence": [
+              {
+                "timestamp_sec": 1114.36,
+                "observation": "A man and a woman are seated at an outdoor table with food and brass tumblers, engaged in a casual conversation."
+              },
+              {
+                "timestamp_sec": 1121.36,
+                "observation": "The woman is smiling and laughing while the man gestures, indicating a happy and relaxed mood."
+              },
+              {
+                "timestamp_sec": 1123.36,
+                "observation": "The man continues to speak in a friendly manner, with no signs of distress, violence, or sensitive topics."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "candidate_423",
+      "timestamp_sec": 1167.88,
+      "latest_start_sec": 1168.13,
+      "brand_id": "brand_a",
+      "creative_id": "a_15s_bn",
+      "creative_url": "/api/ads/brand_a/a_15s_bn",
+      "duration_sec": 6.0,
+      "where": {
+        "score": 0.5842499999999996,
+        "components": {
+          "visual": 1.0,
+          "dialogue_gap": 1.0,
+          "semantic_transition": 0.1,
+          "narrative_closure": 0.15,
+          "shot_stability": 0.37999999999999545,
+          "confidence": 0.925
+        },
+        "weights": {
+          "visual": 0.25,
+          "dialogue_gap": 0.2,
+          "semantic_transition": 0.2,
+          "narrative_closure": 0.2,
+          "shot_stability": 0.1,
+          "confidence": 0.05
+        },
+        "dialogue_safe": true,
+        "confirmed_semantic_boundary": false,
+        "nearby_gap_sec": 2.5,
+        "quality_floor": 0.55,
+        "survival_reasons": [
+          "no_exact_speech_crossing",
+          "quality_signals_combined"
+        ],
+        "narrative_closure": "ongoing",
+        "dialogue_continuity": "continuing",
+        "hard_gates_passed": true,
+        "rank": 47
+      },
+      "whether": {
+        "pass": true,
+        "reasons": [],
+        "projected_ad_load_percent": 4.888328844640308,
+        "ad_duration_sec": 6.0,
+        "limits": {
+          "min_break_gap_sec": 30.0,
+          "max_breaks_per_hour": 12,
+          "max_ad_load_percent": 10.0
+        },
+        "selection_reason": "global_schedule_quality"
+      },
+      "what": {
+        "score": 0.7150000000000001,
+        "brand_matches": [],
+        "brands": [
+          {
+            "brand_id": "brand_a",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.7150000000000001,
+            "components": {
+              "dominant_activity": 1.0,
+              "target_overlap": 0.3333333333333333,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_d",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.21125,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.6666666666666666,
+              "category_relevance": 0.0,
+              "secondary_relevance": 1.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_c",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_e",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_f",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_g",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_h",
+            "eligible": true,
+            "hard_blocks": [],
+            "score": 0.0,
+            "components": {
+              "dominant_activity": 0.0,
+              "target_overlap": 0.0,
+              "category_relevance": 0.0,
+              "secondary_relevance": 0.0,
+              "confidence_factor": 0.975
+            }
+          },
+          {
+            "brand_id": "brand_b",
+            "eligible": false,
+            "hard_blocks": [
+              "eating"
+            ],
+            "score": null,
+            "components": {}
+          }
+        ],
+        "safety_verification": [
+          {
+            "brand_id": "brand_a",
+            "verdict": "SAFE",
+            "confidence": 0.95,
+            "conflicts": [],
+            "evidence": [
+              {
+                "timestamp_sec": 1162.88,
+                "observation": "A man and a woman are seated at an outdoor table eating food from a food truck, with a large building in the background. The setting is casual and bright."
+              },
+              {
+                "timestamp_sec": 1167.88,
+                "observation": "The woman is looking at her mobile phone, presumably to share her location as requested by the man. The interaction is conversational and non-threatening."
+              },
+              {
+                "timestamp_sec": 1170.88,
+                "observation": "The man is speaking and gesturing while the woman looks at her phone. The dialogue involves a request to share location, which is a standard social interaction in this context."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
