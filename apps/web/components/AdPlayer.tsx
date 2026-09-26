@@ -1,7 +1,7 @@
 'use client';
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { API, AdBreak } from '../lib/api';
-import { nextBreak, skippedBySeek } from '../lib/playback';
+import { nextBreak, previewStart, skippedBySeek } from '../lib/playback';
 
 export type AdPlayerHandle = { preview: (candidateId: string) => void };
 const AdPlayer = forwardRef<AdPlayerHandle, { source: string; breaks: AdBreak[] }>(function AdPlayer({ source, breaks }, ref) {
@@ -11,6 +11,9 @@ const AdPlayer = forwardRef<AdPlayerHandle, { source: string; breaks: AdBreak[] 
   const previous = useRef(0);
   const resume = useRef(0);
   const activeRef = useRef<AdBreak | null>(null);
+  const previewTarget = useRef<AdBreak | null>(null);
+  const previewSeeking = useRef(false);
+  const previewFrame = useRef<number | null>(null);
   const seeking = useRef(false);
   const [active, setActive] = useState<AdBreak | null>(null);
   const [message, setMessage] = useState('Ready to play content');
@@ -20,17 +23,31 @@ const AdPlayer = forwardRef<AdPlayerHandle, { source: string; breaks: AdBreak[] 
   useImperativeHandle(ref, () => ({ preview(candidateId) {
     const slot = breaks.find(item => item.candidate_id === candidateId);
     if (!slot || !content.current) return;
-    content.current.pause();
+    const video = content.current;
+    video.pause();
     ad.current?.pause();
-    played.current.add(slot.candidate_id);
+    if (previewFrame.current !== null) cancelAnimationFrame(previewFrame.current);
+    previewFrame.current = null;
+    previewTarget.current = slot;
+    played.current.delete(slot.candidate_id);
     resume.current = slot.timestamp_sec;
-    previous.current = slot.timestamp_sec;
-    activeRef.current = slot;
+    const start = previewStart(slot.timestamp_sec);
+    previous.current = start;
+    activeRef.current = null;
     setError('');
     setAdNeedsPlay(false);
-    setActive({...slot});
-    setMessage(`Preview advertisement: ${slot.brand_id} · resume at ${slot.timestamp_sec.toFixed(3)} seconds`);
+    setActive(null);
+    setMessage(`Playing episode from ${start.toFixed(3)} seconds to the break at ${slot.timestamp_sec.toFixed(3)} seconds`);
+    previewSeeking.current = Math.abs(video.currentTime - start) > 0.05;
+    seeking.current = previewSeeking.current;
+    if (previewSeeking.current) video.currentTime = start;
+    if (!previewSeeking.current) seeking.current = false;
+    void video.play().catch(() => setError('Press play to watch the lead-in.'));
   }}), [breaks]);
+
+  useEffect(() => () => {
+    if (previewFrame.current !== null) cancelAnimationFrame(previewFrame.current);
+  }, []);
 
   useEffect(() => {
     if (!active || !ad.current) return;
@@ -47,6 +64,7 @@ const AdPlayer = forwardRef<AdPlayerHandle, { source: string; breaks: AdBreak[] 
     if (!content.current) return;
     ad.current?.pause();
     activeRef.current = null;
+    previewTarget.current = null;
     setActive(null);
     setAdNeedsPlay(false);
     setError('');
@@ -59,6 +77,21 @@ const AdPlayer = forwardRef<AdPlayerHandle, { source: string; breaks: AdBreak[] 
   function tick() {
     const video = content.current;
     if (!video || activeRef.current || seeking.current || video.seeking || video.paused) return;
+    const preview = previewTarget.current;
+    if (preview) {
+      if (video.currentTime < preview.timestamp_sec) return;
+      previewTarget.current = null;
+      if (previewFrame.current !== null) cancelAnimationFrame(previewFrame.current);
+      previewFrame.current = null;
+      played.current.add(preview.candidate_id);
+      resume.current = preview.timestamp_sec;
+      previous.current = preview.timestamp_sec;
+      video.pause();
+      activeRef.current = preview;
+      setActive({...preview});
+      setMessage(`Advertisement: ${preview.brand_id} · resume at ${resume.current.toFixed(3)} seconds`);
+      return;
+    }
     const slot = nextBreak(previous.current, video.currentTime, breaks, played.current);
     previous.current = video.currentTime;
     if (!slot) return;
@@ -70,15 +103,34 @@ const AdPlayer = forwardRef<AdPlayerHandle, { source: string; breaks: AdBreak[] 
     setMessage(`Advertisement: ${slot.brand_id} · resume at ${resume.current.toFixed(3)} seconds`);
   }
 
+  function watchPreview() {
+    if (!previewTarget.current || !content.current || content.current.paused) return;
+    tick();
+    if (previewTarget.current) previewFrame.current = requestAnimationFrame(watchPreview);
+  }
+
   return <section aria-label="Content and advertisement player">
     <h2>Episode playback</h2>
     <p role="status" data-testid="player-status">{message}</p>
     <video ref={content} data-testid="content-video" src={API + source} controls playsInline preload="metadata"
       hidden={Boolean(active)} onTimeUpdate={tick}
-      onSeeking={() => { seeking.current = true; }}
+      onPlaying={() => {
+        if (previewFrame.current !== null) cancelAnimationFrame(previewFrame.current);
+        watchPreview();
+      }}
+      onSeeking={() => {
+        seeking.current = true;
+        if (previewTarget.current && !previewSeeking.current) {
+          previewTarget.current = null;
+          if (previewFrame.current !== null) cancelAnimationFrame(previewFrame.current);
+          previewFrame.current = null;
+          setMessage('Preview cancelled after seeking. Ready to play content.');
+        }
+      }}
       onSeeked={() => {
         if (!content.current) return;
-        skippedBySeek(previous.current, content.current.currentTime, breaks).forEach(id => played.current.add(id));
+        if (!previewSeeking.current) skippedBySeek(previous.current, content.current.currentTime, breaks).forEach(id => played.current.add(id));
+        previewSeeking.current = false;
         previous.current = content.current.currentTime;
         seeking.current = false;
       }}
@@ -88,7 +140,7 @@ const AdPlayer = forwardRef<AdPlayerHandle, { source: string; breaks: AdBreak[] 
       onEnded={resumeContent} onError={() => setError('Advertisement failed to load. Resume content below.')} />}
     {adNeedsPlay && <button onClick={() => { void ad.current?.play().then(() => setAdNeedsPlay(false)); }}>Play advertisement</button>}
     {error && <p role="alert">{error} {active && <button onClick={resumeContent}>Resume content</button>}</p>}
-    <p>Seeking forward skips crossed breaks. Automatic breaks play once. Schedule clicks replay the selected advertisement every time.</p>
+    <p>Seeking forward skips crossed breaks. Automatic breaks play once. Schedule clicks play three seconds of the episode before the selected advertisement.</p>
   </section>;
 });
 export default AdPlayer;

@@ -60,7 +60,7 @@ class Settings(BaseSettings):
     where_closure_weight: float = Field(default=0.2, ge=0)
     where_stability_weight: float = Field(default=0.1, ge=0)
     where_confidence_weight: float = Field(default=0.05, ge=0)
-    sequence_interruption_penalty: float = Field(default=0.18, ge=0, le=0.5)
+    sequence_interruption_penalty: float = Field(default=0.12, ge=0, le=0.5)
     sequence_long_pause_sec: float = Field(default=20, gt=0)
     scene_threshold: float = Field(default=27, gt=0)
     max_upload_mb: int = Field(default=4096, gt=0)

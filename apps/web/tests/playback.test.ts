@@ -1,8 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { nextBreak, skippedBySeek } from '../lib/playback';
+import { nextBreak, previewStart, skippedBySeek } from '../lib/playback';
 
 const breaks = [{ candidate_id: 'one', timestamp_sec: 20 }, { candidate_id: 'two', timestamp_sec: 50 }];
+
+test('schedule preview starts three seconds before the break and clamps at episode start', () => {
+  assert.equal(previewStart(20), 17);
+  assert.equal(previewStart(2), 0);
+});
 
 test('content reaches break, inserts once despite repeated time events', () => {
   assert.equal(nextBreak(19.9, 20.2, breaks, new Set())?.candidate_id, 'one');
