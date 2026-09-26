@@ -86,6 +86,13 @@ def test_mourning_synonym_is_hard_block():
     assert not match.eligible
 
 
+def test_unconscious_person_blocks_medical_emergency_exclusion():
+    match = BrandMatchingService().evaluate(semantics(
+        narrative_state_before="A character appears unconscious in a dimly lit room"),
+        [brand(negative_contexts=["medical emergency"])])[0]
+    assert not match.eligible
+
+
 def test_new_ninth_brand_is_loaded_without_source_change(tmp_path):
     records = [brand(brand_id=f"b{i}").model_dump() for i in range(9)]
     records[8]["target_contexts"] = ["cooking"]

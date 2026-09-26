@@ -25,6 +25,7 @@ SENSITIVE_ALIASES = {
     "accident": ("crash", "collision"),
     "injury": ("injured", "wounded", "bleeding"),
     "financial distress": ("bankruptcy", "bankrupt", "debt crisis"),
+    "medical emergency": ("unconscious", "unresponsive", "resuscitation", "critical condition", "severe injury"),
 }
 
 
