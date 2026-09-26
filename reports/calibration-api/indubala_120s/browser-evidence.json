@@ -3,8 +3,9 @@
   "candidate_id": "candidate_007",
   "brand_id": "brand_d",
   "boundary_sec": 39.4,
-  "paused_at_sec": 39.447219,
-  "resumed_at_sec": 39.534164,
+  "paused_at_sec": 39.448582,
+  "captured_resume_sec": 39.449,
+  "resumed_at_sec": 39.559957,
   "actual_ad_playback": true,
   "replay_prevented": true,
   "passed": true
