@@ -1,0 +1,32 @@
+import json
+from pathlib import Path
+
+from interlude.domain import AdBreak, AnalysisManifest, AnalysisResult
+
+
+class ManifestService:
+    def build(self, result: AnalysisResult) -> AnalysisManifest:
+        accepted = sorted((d for d in result.decisions if d.accepted), key=lambda d: d.timestamp_sec)
+        return AnalysisManifest(video=result.video, summary={
+            "scene_count": len(result.scenes), "candidate_count": len(result.candidates),
+            "prefilter_rejected_count": sum(c.prefilter_status == "REJECTED" for c in result.candidates),
+            "semantic_candidates_analyzed": sum(d.semantics is not None for d in result.decisions),
+            "semantic_candidates_attempted": sum(c.prefilter_status == "SURVIVED" for c in result.candidates),
+            "accepted_break_count": len(accepted)}, ad_breaks=[
+                AdBreak(candidate_id=d.candidate_id, timestamp_sec=d.timestamp_sec, brand_id=d.selected_brand_id,
+                        creative_id=d.selected_creative_id, creative_url=d.creative_url,
+                        duration_sec=d.creative_duration_sec, where=d.debug.get("where", {}),
+                        whether=d.debug.get("whether", {}), what={"score": d.brand_match_score,
+                            "brand_matches": [m.model_dump() for m in d.brand_matches]}) for d in accepted])
+
+    def write(self, result: AnalysisResult, output: Path) -> dict[str, Path]:
+        output.mkdir(parents=True, exist_ok=True)
+        artifacts = {}
+        for name, payload in (("analysis", self.build(result).model_dump(mode="json")),
+                              ("debug", result.model_dump(mode="json"))):
+            target = output / f"{name}.json"
+            temporary = target.with_suffix(".tmp")
+            temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+            temporary.replace(target)
+            artifacts[name] = target
+        return artifacts
