@@ -1,9 +1,10 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { API, AdBreak } from '../lib/api';
 import { nextBreak, skippedBySeek } from '../lib/playback';
 
-export default function AdPlayer({ source, breaks }: { source: string; breaks: AdBreak[] }) {
+export type AdPlayerHandle = { preview: (candidateId: string) => void };
+const AdPlayer = forwardRef<AdPlayerHandle, { source: string; breaks: AdBreak[] }>(function AdPlayer({ source, breaks }, ref) {
   const content = useRef<HTMLVideoElement>(null);
   const ad = useRef<HTMLVideoElement>(null);
   const played = useRef(new Set<string>());
@@ -16,6 +17,21 @@ export default function AdPlayer({ source, breaks }: { source: string; breaks: A
   const [error, setError] = useState('');
   const [adNeedsPlay, setAdNeedsPlay] = useState(false);
 
+  useImperativeHandle(ref, () => ({ preview(candidateId) {
+    const slot = breaks.find(item => item.candidate_id === candidateId);
+    if (!slot || !content.current) return;
+    content.current.pause();
+    ad.current?.pause();
+    played.current.add(slot.candidate_id);
+    resume.current = slot.timestamp_sec;
+    previous.current = slot.timestamp_sec;
+    activeRef.current = slot;
+    setError('');
+    setAdNeedsPlay(false);
+    setActive({...slot});
+    setMessage(`Preview advertisement: ${slot.brand_id} · resume at ${slot.timestamp_sec.toFixed(3)} seconds`);
+  }}), [breaks]);
+
   useEffect(() => {
     if (!active || !ad.current) return;
     // Preserve user audio preferences across the two media elements.
@@ -23,6 +39,7 @@ export default function AdPlayer({ source, breaks }: { source: string; breaks: A
       ad.current.muted = content.current.muted;
       ad.current.volume = content.current.volume;
     }
+    ad.current.currentTime = 0;
     void ad.current.play().catch(() => setAdNeedsPlay(true));
   }, [active]);
 
@@ -71,6 +88,7 @@ export default function AdPlayer({ source, breaks }: { source: string; breaks: A
       onEnded={resumeContent} onError={() => setError('Advertisement failed to load. Resume content below.')} />}
     {adNeedsPlay && <button onClick={() => { void ad.current?.play().then(() => setAdNeedsPlay(false)); }}>Play advertisement</button>}
     {error && <p role="alert">{error} {active && <button onClick={resumeContent}>Resume content</button>}</p>}
-    <p>Seeking forward skips crossed breaks. Each break plays at most once in this player session.</p>
+    <p>Seeking forward skips crossed breaks. Automatic breaks play once. Schedule clicks replay the selected advertisement every time.</p>
   </section>;
-}
+});
+export default AdPlayer;
