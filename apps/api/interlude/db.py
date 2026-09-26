@@ -1,0 +1,87 @@
+from datetime import datetime, timezone
+
+from sqlalchemy import (JSON, DateTime, ForeignKey, Index, Integer, String, Text,
+                        create_engine)
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
+from interlude.config import Settings
+
+
+def now():
+    return datetime.now(timezone.utc).replace(tzinfo=None)
+
+
+class Base(DeclarativeBase):
+    pass
+
+
+class VideoRow(Base):
+    __tablename__ = "videos"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    path: Mapped[str] = mapped_column(Text)
+    metadata_json: Mapped[dict] = mapped_column(JSON)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=now)
+
+
+class JobRow(Base):
+    __tablename__ = "analysis_jobs"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    video_id: Mapped[str] = mapped_column(ForeignKey("videos.id"), index=True)
+    status: Mapped[str] = mapped_column(String(32), default="QUEUED")
+    error_code: Mapped[str | None] = mapped_column(String(120))
+    error_stage: Mapped[str | None] = mapped_column(String(32))
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=now)
+    __table_args__ = (Index("ix_analysis_jobs_status_created", "status", "created_at"),)
+
+
+class AnalysisItem:
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    job_id: Mapped[str] = mapped_column(ForeignKey("analysis_jobs.id", ondelete="CASCADE"), index=True)
+    payload: Mapped[dict] = mapped_column(JSON)
+
+
+class SceneRow(AnalysisItem, Base):
+    __tablename__ = "scenes"
+
+
+class TranscriptRow(AnalysisItem, Base):
+    __tablename__ = "transcript_segments"
+
+
+class CandidateRow(AnalysisItem, Base):
+    __tablename__ = "break_candidates"
+
+
+class DecisionRow(AnalysisItem, Base):
+    __tablename__ = "break_decisions"
+
+
+class BrandRow(Base):
+    __tablename__ = "brands"
+    id: Mapped[str] = mapped_column(String(96), primary_key=True)
+    payload: Mapped[dict] = mapped_column(JSON)
+
+
+class CreativeRow(Base):
+    __tablename__ = "creatives"
+    brand_id: Mapped[str] = mapped_column(ForeignKey("brands.id"), primary_key=True)
+    id: Mapped[str] = mapped_column(String(96), primary_key=True)
+    payload: Mapped[dict] = mapped_column(JSON)
+
+
+class ArtifactRow(Base):
+    __tablename__ = "artifacts"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    job_id: Mapped[str] = mapped_column(ForeignKey("analysis_jobs.id", ondelete="CASCADE"), index=True)
+    kind: Mapped[str] = mapped_column(String(32))
+    path: Mapped[str] = mapped_column(Text)
+
+
+def make_engine(settings: Settings):
+    return create_engine(settings.database_url(), pool_pre_ping=True, pool_recycle=1800,
+                         connect_args={"connect_timeout": 10, "read_timeout": 30, "write_timeout": 30},
+                         hide_parameters=True)
+
+
+def sessions(settings: Settings):
+    return sessionmaker(bind=make_engine(settings), expire_on_commit=False)
