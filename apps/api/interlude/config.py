@@ -55,6 +55,25 @@ class Settings(BaseSettings):
     max_video_duration_sec: float = Field(default=300, gt=0)
     cors_origins: list[str] = ["http://localhost:3000"]
     worker_lease_sec: int = Field(default=900, ge=300)
+    min_pre_cut_silence_ms: int = Field(default=500, ge=100)
+    min_post_cut_silence_ms: int = Field(default=500, ge=100)
+    min_transition_confidence: float = Field(default=0.8, ge=0, le=1)
+    min_transition_score: float = Field(default=0.65, ge=0, le=1)
+    sensitive_context_window_sec: float = Field(default=90, ge=0)
+    context_sample_interval_sec: float = Field(default=20, gt=0, le=30)
+    context_freshness_sec: float = Field(default=30, gt=0)
+    brand_activity_weight: float = Field(default=0.6, gt=0)
+    brand_target_weight: float = Field(default=0.25, ge=0)
+    brand_category_weight: float = Field(default=0.1, ge=0)
+    brand_secondary_weight: float = Field(default=0.05, ge=0)
+    safety_min_confidence: float = Field(default=0.9, ge=0, le=1)
+    optimizer_beam_width: int = Field(default=2048, ge=1, le=100000)
+    semantic_cache_enabled: bool = True
+    reports_dir: Path = ROOT / "reports"
+    upload_retention_hours: float = Field(default=72, ge=1)
+    work_retention_hours: float = Field(default=24, ge=1)
+    worker_heartbeat_sec: int = Field(default=15, ge=1)
+    media_base_url: str = "http://localhost:8000"
 
     @model_validator(mode="after")
     def validate_weights(self):
@@ -62,6 +81,11 @@ class Settings(BaseSettings):
             raise ValueError("ASR segment timestamps are required for dialogue safety")
         if sum(self.weights.values()) <= 0:
             raise ValueError("WHERE weights must have positive sum")
+        if self.brand_activity_weight <= sum((self.brand_target_weight, self.brand_category_weight,
+                                               self.brand_secondary_weight)):
+            raise ValueError("dominant activity weight must exceed all secondary weights combined")
+        if self.worker_heartbeat_sec >= self.worker_lease_sec / 3:
+            raise ValueError("heartbeat must be less than one third of lease")
         return self
 
     @property
@@ -75,7 +99,7 @@ class Settings(BaseSettings):
                           query={"charset": "utf8mb4"})
 
     def prepare_dirs(self):
-        for name in ("uploads", "work", "ads", "outputs"):
+        for name in ("uploads", "work", "ads", "outputs", "semantic_cache"):
             (self.data_dir / name).mkdir(parents=True, exist_ok=True)
 
 

@@ -1,7 +1,7 @@
 from enum import StrEnum
 from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, computed_field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, SerializeAsAny, computed_field, model_validator
 
 Score = Annotated[float, Field(ge=0, le=1, allow_inf_nan=False)]
 Seconds = Annotated[float, Field(ge=0, allow_inf_nan=False)]
@@ -32,6 +32,8 @@ class Scene(Interval):
     id: SafeId
     boundary_score: Score = 0
     representative_frames: list[Frame] = Field(default_factory=list)
+    shot_ids: list[str] = Field(default_factory=list)
+    grouping_reasons: list[str] = Field(default_factory=list)
 
     @computed_field
     @property
@@ -69,6 +71,7 @@ class BreakCandidate(Model):
     raw_boundary_score: Score
     prefilter_status: Literal["SURVIVED", "REJECTED"]
     rejection_reasons: list[str] = Field(default_factory=list)
+    dialogue_safety: dict[str, Any] = Field(default_factory=dict)
 
 
 class SceneSemantics(Model):
@@ -80,6 +83,65 @@ class SceneSemantics(Model):
     narrative_state_after: str = Field(min_length=1)
     semantic_transition_score: Score
     confidence: Score
+
+
+class SemanticEvidence(Model):
+    timestamp_sec: Seconds
+    observation: str = Field(min_length=1)
+
+
+class Phase2Semantics(SceneSemantics):
+    narrative_state: Literal["scene_concluding", "ongoing", "uncertain"]
+    dialogue_continuity: Literal["completed", "continuing", "no_dialogue", "uncertain"]
+    transition_type: Literal["location_change", "time_change", "activity_change", "narrative_change",
+                             "camera_angle", "montage", "none", "uncertain"]
+    transition_confidence: Score
+    evidence: list[SemanticEvidence] = Field(min_length=1)
+    location_before: str = Field(min_length=1)
+    location_after: str = Field(min_length=1)
+    characters_continuing: bool
+    sensitive_context_continuing: bool
+
+
+class SafetyVerdict(Model):
+    verdict: Literal["SAFE", "BLOCKED", "UNCERTAIN"]
+    confidence: Score
+    conflicts: list[str]
+    evidence: list[SemanticEvidence] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def consistent(self):
+        if self.verdict == "SAFE" and self.conflicts:
+            raise ValueError("SAFE cannot include negative conflicts")
+        return self
+
+
+class RecentContext(Model):
+    context: str
+    last_seen_sec: Seconds
+    distance_sec: Seconds
+    narratively_continuing: bool
+
+
+class ContextSnapshot(Model):
+    current_contexts: list[str]
+    current_sensitive_contexts: list[str]
+    recent_sensitive_contexts: list[RecentContext]
+    uncertain: bool = False
+
+
+class BrandEvaluation(Model):
+    brand_id: str
+    eligible: bool
+    hard_blocks: list[str]
+    score: Score | None = None
+    components: dict[str, float] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def unranked_if_blocked(self):
+        if not self.eligible and self.score is not None:
+            raise ValueError("ineligible brands cannot be ranked")
+        return self
 
 
 class Creative(Model):
@@ -124,7 +186,7 @@ class BreakDecision(Model):
     creative_url: str | None = None
     creative_duration_sec: Seconds = 0
     brand_match_score: Score = 0
-    semantics: SceneSemantics | None = None
+    semantics: SerializeAsAny[SceneSemantics] | None = None
     brand_matches: list[BrandMatch] = Field(default_factory=list)
     debug: dict[str, Any] = Field(default_factory=dict)
 
@@ -156,6 +218,8 @@ class AnalysisResult(Model):
     candidates: list[BreakCandidate]
     decisions: list[BreakDecision]
     errors: list[str] = Field(default_factory=list)
+    raw_shots: list[Scene] = Field(default_factory=list)
+    run_metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class JobStatus(StrEnum):
