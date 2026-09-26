@@ -1,6 +1,6 @@
-# Interlude — Episode Studio
+# Interlude 
 
-Interlude analyzes Bengali episodes and proposes contextually relevant ad breaks without cutting through speech or ignoring brand exclusions. It is a protected team workspace with a background analysis worker, an inspectable placement review, playable ad previews, and **VMAP 1.0 export with embedded VAST 3.0**. The complete workflow supports H.264 MP4 episodes with audio up to the configured limits; the default limits are **4 GiB** and **two hours**.
+Interlude is a context-aware ad placement engine for long-form video. It understands Bengali episodes across scenes, speech, and story context to find natural ad breaks, avoid interrupting dialogue, and match each break with a safe, relevant brand. It then generates VMAP 1.0 with embedded VAST 3.0 and a playable flow that pauses the episode for the ad and resumes seamlessly.
 
 ## What the app includes
 
