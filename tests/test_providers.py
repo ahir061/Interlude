@@ -65,3 +65,23 @@ def test_asr_missing_timestamps_fails_safely(tmp_path):
     client = httpx.Client(transport=httpx.MockTransport(lambda r: httpx.Response(200, json={"text": "কথা"})))
     with pytest.raises(ProviderError):
         GroqWhisperProvider(settings(), client, sleep=lambda _: None).transcribe(path)
+
+
+def test_provider_retry_budget_is_bounded_with_backoff():
+    attempts, waits = [], []
+    def unavailable(request):
+        attempts.append(1)
+        return httpx.Response(503)
+    with pytest.raises(ProviderError):
+        QwenSemanticProvider(settings(), httpx.Client(transport=httpx.MockTransport(unavailable)),
+                             sleep=waits.append).analyze([], [], [], 10)
+    assert len(attempts) == 2 and waits == [1]
+
+
+def test_asr_reversed_timestamp_is_not_trusted(tmp_path):
+    path = tmp_path / "audio.wav"
+    path.write_bytes(b"test")
+    client = httpx.Client(transport=httpx.MockTransport(lambda r: httpx.Response(200,
+        json={"text": "কথা", "segments": [{"start": 8, "end": 3, "text": "কথা"}]})))
+    with pytest.raises(ProviderError, match="asr_invalid_response"):
+        GroqWhisperProvider(settings(), client, sleep=lambda _: None).transcribe(path)
