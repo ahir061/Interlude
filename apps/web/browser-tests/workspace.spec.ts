@@ -7,7 +7,7 @@ test('episode workspace exposes real scene map, ranked decisions and dynamic cat
   test.skip(!manifestPath,'Set a real completed manifest for workspace review.');
   const manifest=JSON.parse(fs.readFileSync(manifestPath!,'utf8'));
   await page.goto(`/?video=${manifest.video.id}`);
-  await expect(page.getByRole('heading',{name:'Your episodes, intelligently placed.'})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'Ad breaks, intelligently placed.'})).toBeVisible();
   await expect(page.getByText('H.264 MP4 with audio',{exact:false})).toContainText('120 minutes');
   await expect(page.getByTestId('content-video')).toBeVisible();
   await expect(page.getByLabel('Semantic scene timeline')).toBeVisible();

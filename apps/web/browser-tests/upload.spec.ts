@@ -15,7 +15,7 @@ test('web accepts a complete episode and cancellation fences its job',async ({pa
   expect(uploaded.status()).toBe(202);
   const result=await uploaded.json();
   expect(result.video.duration_sec).toBeGreaterThan(300);
-  await expect(page.getByText('Analysis runs in the background.',{exact:false})).toBeVisible({timeout:30000});
+  await expect(page.getByText('Analysis runs on the cloud.',{exact:false})).toBeVisible({timeout:30000});
   await expect(page.getByRole('button',{name:'Cancel',exact:true})).toBeVisible();
   await page.getByRole('button',{name:'Cancel',exact:true}).click();
   await expect.poll(async()=> (await (await request.get(`/api/jobs/${result.job.id}`)).json()).status,{timeout:30000}).toBe('CANCELLED');

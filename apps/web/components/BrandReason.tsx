@@ -1,5 +1,6 @@
 'use client';
 import {useEffect,useState} from 'react';
+import {ThinkingOrb} from 'thinking-orbs';
 import {request,timecode} from '../lib/api';
 
 type Explanation={brand_id:string;summary:string;source:string;evidence:{timestamp_sec:number;observation:string}[];safety:{verdict:string;confidence:number}[]};
@@ -16,7 +17,7 @@ export default function BrandReason({videoId,candidateId}:{videoId:string;candid
     return()=>{cancelled=true;};
   },[videoId,candidateId,attempt]);
   return <section aria-label="Brand selection explanation"><h3>Why this brand?</h3>
-    {!value&&!error&&<p role="status">Asking Qwen to explain the recorded match…</p>}
+    {!value&&!error&&<p role="status" className="loading"><ThinkingOrb state="composing" size={20} theme="light" aria-hidden="true"/>Asking Qwen to explain the recorded match…</p>}
     {error&&<p>{error} <button className="text-button" onClick={()=>setAttempt(x=>x+1)}>Retry explanation</button></p>}
     {value&&<><p><strong>Qwen explanation</strong></p><p data-testid="brand-explanation">{value.summary}</p>
       <small>The engine ranks brands. Qwen summarizes the recorded context and scores.</small>
