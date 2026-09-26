@@ -54,7 +54,7 @@ export default function AdPlayer({ source, breaks }: { source: string; breaks: A
   }
 
   return <section aria-label="Content and advertisement player">
-    <h2>Playback demo</h2>
+    <h2>Episode playback</h2>
     <p role="status" data-testid="player-status">{message}</p>
     <video ref={content} data-testid="content-video" src={API + source} controls playsInline preload="metadata"
       hidden={Boolean(active)} onTimeUpdate={tick}
