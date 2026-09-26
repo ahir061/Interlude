@@ -54,6 +54,10 @@ class Transcript(Model):
     language: str = "bn"
     segments: list[TranscriptSegment] = Field(default_factory=list)
 
+    @property
+    def speech_words(self) -> list[Word]:
+        return [word for segment in self.segments for word in segment.words]
+
     def around(self, start: float, end: float) -> list[TranscriptSegment]:
         return [s for s in self.segments if s.end_sec >= start and s.start_sec <= end]
 
@@ -71,6 +75,7 @@ class BreakCandidate(Model):
     raw_boundary_score: Score
     prefilter_status: Literal["SURVIVED", "REJECTED"]
     rejection_reasons: list[str] = Field(default_factory=list)
+    surrounding_shot_sec: Seconds = 0
     dialogue_safety: dict[str, Any] = Field(default_factory=dict)
 
 

@@ -1,3 +1,4 @@
+import csv
 import json
 from pathlib import Path
 
@@ -36,6 +37,15 @@ class ManifestService:
             temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
             temporary.replace(target)
             artifacts[name] = target
+        from interlude.services.placement_report import candidate_rows
+        rows = candidate_rows(result)
+        (output / "candidates.json").write_text(json.dumps(rows, ensure_ascii=False, indent=2))
+        if rows:
+            with (output / "candidates.csv").open("w", newline="") as stream:
+                writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+                writer.writeheader()
+                writer.writerows({k: json.dumps(v, ensure_ascii=False) if isinstance(v, list) else v
+                                 for k, v in row.items()} for row in rows)
         from interlude.services.vmap import VMAPSerializer
         vmap = output / "manifest.vmap.xml"
         temporary = vmap.with_suffix(".tmp")

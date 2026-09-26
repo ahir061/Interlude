@@ -37,12 +37,12 @@ def test_rapid_montage_does_not_create_many_breaks():
         30: semantics(transition_type="montage"), 60: semantics(transition_type="montage")})) == 1
 
 
-def test_short_pause_inside_sentence_rejected_despite_high_score():
+def test_semantic_continuation_does_not_override_exact_speech_timeline():
     transcript = Transcript(segments=[TranscriptSegment(start_sec=20, end_sec=29, text="Where are you—"),
                                       TranscriptSegment(start_sec=31, end_sec=35, text="—going?")])
     result = DialogueSafetyGate(Settings(_env_file=None)).evaluate(30, transcript, [], 90,
         semantics(dialogue_continuity="continuing"))
-    assert not result["safe"] and "semantic_dialogue_continues" in result["reasons"]
+    assert result["safe"] and result["semantic_dialogue_continuity"] == "continuing"
 
 
 def test_asr_vad_disagreement_is_unsafe():
@@ -105,3 +105,30 @@ def test_dominant_activity_is_strongly_relevant(activity, category):
     snapshot = ContextMemory(s).snapshot(30, scene)
     ranked = BrandRankingEngine(s).rank(scene, brands, BrandEligibilityEngine().evaluate(scene, snapshot, brands))
     assert ranked[0].score >= 0.6
+
+
+def test_relevance_uncertainty_reduces_score_without_eliminating_brand():
+    s = Settings(_env_file=None)
+    brand = Brand(brand_id="food", display_name="Food", category="food", target_contexts=["cooking"])
+    scores = []
+    for confidence in (0.95, 0.55):
+        scene = semantics(confidence=confidence)
+        memory = ContextMemory(s)
+        memory.observe(30, scene)
+        eligible = BrandEligibilityEngine().evaluate(scene, memory.snapshot(30, scene), [brand])
+        ranked = BrandRankingEngine(s).rank(scene, [brand], eligible)
+        assert ranked[0].eligible
+        scores.append(ranked[0].score)
+    assert 0 < scores[1] < scores[0]
+
+
+def test_negative_conflict_blocks_brand_not_every_other_brand():
+    s = Settings(_env_file=None)
+    scene = semantics(sensitive_contexts=["grief"])
+    memory = ContextMemory(s)
+    memory.observe(30, scene)
+    brands = [Brand(brand_id="food", display_name="Food", category="food", negative_contexts=["grief"]),
+              Brand(brand_id="phone", display_name="Phone", category="telecom", negative_contexts=["violence"])]
+    results = BrandEligibilityEngine().evaluate(scene, memory.snapshot(30, scene), brands)
+    assert not results[0].eligible and results[0].hard_blocks == ["grief"]
+    assert results[1].eligible

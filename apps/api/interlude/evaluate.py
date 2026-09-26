@@ -17,8 +17,9 @@ def measured_metrics(debug: dict, brands: list) -> dict:
     duration = debug["video"]["duration_sec"]
     transcript = debug["transcript"]["segments"]
     vad = debug["vad_intervals"]
-    mid_dialogue = sum(any(s["start_sec"] <= d["timestamp_sec"] <= s["end_sec"] for s in transcript+vad)
-                      or d["semantics"].get("dialogue_continuity") not in ("completed", "no_dialogue") for d in accepted)
+    words = [word for segment in transcript for word in segment.get("words", [])]
+    mid_dialogue = sum(any(s["start_sec"] <= d["timestamp_sec"] <= s["end_sec"] for s in words+vad)
+                       for d in accepted)
     by_id = {b.brand_id: b for b in brands}
     negative_violations = 0
     for d in accepted:

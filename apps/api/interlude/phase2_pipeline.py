@@ -19,11 +19,11 @@ from interlude.services.media import (MediaError, MediaProbeService, SceneDetect
                                       extract_audio, extract_window, run_media)
 from interlude.services.optimizer import GlobalBreakOptimizer, PlacementOption
 from interlude.services.policy import WhereService
-from interlude.services.scene_builder import DialogueSafetyGate, SemanticSceneBuilder, semantic_hard_gates
+from interlude.services.scene_builder import DialogueSafetyGate, SemanticSceneBuilder
 from interlude.services.speech import VadService
 
 PIPELINE_VERSION = "2.0.0"
-POLICY_VERSION = "precision-2.1"
+POLICY_VERSION = "ranked-safety-2.2"
 logger = logging.getLogger("interlude.pipeline")
 
 
@@ -78,7 +78,7 @@ class Phase2Pipeline:
                 extract_audio(s, source, audio)
             with measure(timings, "asr"):
                 transcript = self.asr.transcribe(audio)
-                if any(t.end_sec > metadata.duration_sec+0.5 for t in transcript.segments):
+                if any(t.end_sec > metadata.duration_sec+0.5 for t in [*transcript.segments, *transcript.speech_words]):
                     raise ProviderError("asr_timestamp_outside_video")
                 checkpoint("transcript", transcript.segments)
             with measure(timings, "vad"):
@@ -93,6 +93,7 @@ class Phase2Pipeline:
                         candidate.prefilter_status = "REJECTED"
                     decisions.append(BreakDecision(candidate_id=candidate.id, timestamp_sec=candidate.timestamp_sec,
                         rejection_reasons=list(candidate.rejection_reasons), debug={"dialogue_safety": candidate.dialogue_safety,
+                            "hard_block_reason": list(candidate.rejection_reasons),
                             "outcome": "NO_AD", "scene": {"before": candidate.preceding_scene_id, "after": candidate.following_scene_id}}))
                 checkpoint("candidates", candidates)
             survivors = {c.timestamp_sec: c for c in candidates if c.prefilter_status == "SURVIVED"}
@@ -117,7 +118,7 @@ class Phase2Pipeline:
                             video_hash, catalogue_hash, "boundary" if candidate else "context_monitor")
                         if not isinstance(semantic, Phase2Semantics):
                             raise ProviderError("semantic_invalid_contract")
-                    memory.observe(timestamp, semantic if semantic.confidence >= s.min_semantic_confidence else None)
+                    memory.observe(timestamp, semantic)
                     observations.append({"timestamp_sec": timestamp, "purpose": "boundary" if candidate else "context_monitor",
                                          "semantics": semantic.model_dump(), "error_code": None})
                 except (ProviderError, MediaError) as exc:
@@ -126,6 +127,7 @@ class Phase2Pipeline:
                     observations.append({"timestamp_sec": timestamp, "semantics": None, "error_code": code})
                     if candidate:
                         decision_map[candidate.id].rejection_reasons.extend(["model_failure", code])
+                        decision_map[candidate.id].debug["hard_block_reason"].append("scene_context_unresolved")
                 checkpoint("observations", observations)
                 if not candidate or semantic is None:
                     continue
@@ -137,7 +139,7 @@ class Phase2Pipeline:
                 decision.debug["frame_timestamps_sec"] = [f.timestamp_sec for f in frames]
                 snapshot = memory.snapshot(timestamp, semantic)
                 decision.debug["context_memory"] = snapshot.model_dump()
-                decision.rejection_reasons = list(dict.fromkeys(gate["reasons"] + semantic_hard_gates(semantic, s)))
+                decision.rejection_reasons = list(dict.fromkeys(gate["reasons"]))
                 if not decision.rejection_reasons:
                     semantics_by_time[timestamp] = semantic
                 if decision.rejection_reasons:
@@ -163,7 +165,7 @@ class Phase2Pipeline:
                 verifications = []
                 with measure(timings, "brand_safety_verification"):
                     for match in ranked:
-                        if not match.eligible or match.score is None or match.score < s.min_brand_score:
+                        if not match.eligible or match.score is None:
                             continue
                         brand = next(b for b in brands if b.brand_id == match.brand_id)
                         try:
@@ -182,6 +184,8 @@ class Phase2Pipeline:
                 decision.debug["brand_safety_verification"] = verifications
                 if not any(o.candidate_id == candidate.id for o in options):
                     decision.rejection_reasons.append("no_safe_brand")
+                    decision.debug["hard_block_reason"].append(
+                        "all_brands_hard_blocked" if not any(r.eligible for r in ranked) else "brand_safety_unresolved")
                 checkpoint("decisions", decisions)
             with measure(timings, "semantic_scene_grouping"):
                 scenes = SemanticSceneBuilder(s).group(shots, semantics_by_time)
@@ -192,19 +196,36 @@ class Phase2Pipeline:
                     decision_map[candidate.id].debug["scene"] = {"before": before.id, "after": after.id}
                 checkpoint("scenes", scenes)
                 checkpoint("candidates", candidates)
+            # Rank all scored opportunities before pacing, independent of chronology.
+            scored = sorted((d for d in decisions if "where" in d.debug),
+                            key=lambda d: (-d.where_score, d.timestamp_sec, d.candidate_id))
+            for rank, decision in enumerate(scored, 1):
+                decision.debug["rank"] = rank
+                decision.debug["where"]["rank"] = rank
             progress(JobStatus.BREAK_OPTIMIZATION)
             with measure(timings, "global_optimization"):
                 optimization = GlobalBreakOptimizer(s).finalize(decisions, options, metadata.duration_sec)
             progress(JobStatus.BRAND_MATCHING)
             for decision in decisions:
                 decision.debug["outcome"] = "AD" if decision.accepted else "NO_AD"
+                decision.debug["final_decision"] = decision.debug["outcome"]
+                decision.debug["hard_blocked"] = bool(decision.debug["hard_block_reason"])
+                decision.debug.setdefault("rank", None)
+                decision.debug["why_survived"] = decision.debug.get("where", {}).get("survival_reasons", [])
+                decision.debug["why_lost"] = list(decision.rejection_reasons)
                 if not decision.accepted:
                     logger.info(json.dumps({"event": "candidate_rejected", "job_id": correlation,
                         "timestamp_sec": decision.timestamp_sec, "reasons": decision.rejection_reasons}))
             checkpoint("decisions", decisions)
             with measure(timings, "inspection_clips"):
+                rejected = sorted((d for d in decisions if not d.accepted),
+                                  key=lambda d: (-d.where_score, d.timestamp_sec))
+                speech_rejected = next((d for d in rejected if d.debug["dialogue_safety"]["speech_active_at_cut"]), None)
+                inspect_ids = {d.candidate_id for d in rejected[:2]}
+                if speech_rejected:
+                    inspect_ids.add(speech_rejected.candidate_id)
                 for decision in decisions:
-                    if decision.accepted:
+                    if decision.accepted or decision.candidate_id in inspect_ids:
                         review = s.reports_dir/"inspection"/video_id/f"{decision.candidate_id}.mp4"
                         review.parent.mkdir(parents=True, exist_ok=True)
                         start = max(0, decision.timestamp_sec-10)

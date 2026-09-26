@@ -3,7 +3,7 @@ import pytest
 
 from interlude.config import Settings
 from interlude.domain import (Brand, BreakDecision, Interval, Scene, SceneSemantics, Transcript,
-                              TranscriptSegment, AnalysisResult, VideoMetadata, AnalysisManifest)
+                              TranscriptSegment, Word, AnalysisResult, VideoMetadata, AnalysisManifest)
 from interlude.services.candidates import CandidateService
 from interlude.services.brands import BrandMatchingService, load_brands
 from interlude.services.policy import PacingService, WhereService
@@ -33,7 +33,8 @@ def brand(**kw):
 
 
 def test_active_dialogue_boundary_is_rejected(settings, scenes):
-    transcript = Transcript(segments=[TranscriptSegment(start_sec=59, end_sec=62, text="এখন নয়")])
+    transcript = Transcript(segments=[TranscriptSegment(start_sec=59, end_sec=62, text="এখন নয়",
+        words=[Word(start_sec=59.5, end_sec=60.5, text="এখন")])])
     c = CandidateService(settings).generate(scenes, transcript, [], 120)[0]
     assert c.prefilter_status == "REJECTED"
     assert "asr_active_dialogue" in c.rejection_reasons
@@ -49,9 +50,9 @@ def test_safe_boundary_can_survive_prefilter(settings, scenes):
     assert c.prefilter_status == "SURVIVED"
 
 
-def test_speech_margin_is_conservative(settings, scenes):
+def test_recently_ended_speech_is_not_a_veto(settings, scenes):
     c = CandidateService(settings).generate(scenes, Transcript(), [Interval(start_sec=58, end_sec=59.8)], 120)[0]
-    assert "insufficient_dialogue_separation" in c.rejection_reasons
+    assert c.prefilter_status == "SURVIVED" and not c.speech_active
 
 
 def test_negative_context_is_hard_block():

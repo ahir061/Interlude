@@ -25,3 +25,7 @@ reports/inspection/
 reports/**/*.json
 reports/**/*.md
 reports/**/*.xml
+
+# Generated calibration footage stays local; audit CSVs can be committed explicitly.
+reports/**/*.mp4
+reports/**/*.png

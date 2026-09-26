@@ -41,6 +41,10 @@ class BrandRankingEngine:
                     "category_relevance": float(any(contains(semantics.dominant_activity, c) for c in brand.category.split("/"))),
                     "secondary_relevance": float(overlap > 0)}
                 entry.components = components
-                entry.score = sum(components[k]*weights[k] for k in components)/sum(weights.values())
+                relevance = sum(components[k]*weights[k] for k in components)/sum(weights.values())
+                # Perception confidence changes ranking strength, never eligibility.
+                confidence_factor = 0.5 + 0.5 * semantics.confidence
+                entry.score = relevance * confidence_factor
+                entry.components["confidence_factor"] = confidence_factor
             results.append(entry)
         return sorted(results, key=lambda m: (-(m.score if m.score is not None else -1), m.brand_id))

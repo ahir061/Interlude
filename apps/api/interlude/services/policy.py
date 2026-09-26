@@ -1,5 +1,5 @@
 from interlude.config import Settings
-from interlude.domain import BreakCandidate, BreakDecision, SceneSemantics
+from interlude.domain import BreakCandidate, BreakDecision, SceneSemantics, Phase2Semantics
 
 
 class WhereService:
@@ -8,13 +8,40 @@ class WhereService:
 
     def score(self, candidate: BreakCandidate, semantics: SceneSemantics) -> dict:
         safe = not candidate.speech_active and candidate.prefilter_status == "SURVIVED"
-        components = {"boundary": candidate.raw_boundary_score, "dialogue": float(safe),
-            "silence": min(min(candidate.silence_before_sec, candidate.silence_after_sec) / 2, 1),
-            "semantic": semantics.semantic_transition_score}
+        # A short clear gap is useful; it is never a separate eligibility threshold.
+        gap = candidate.silence_before_sec + candidate.silence_after_sec
+        anchors = [(0, 0), (0.2, 0.35), (0.5, 0.65), (1, 1)]
+        gap_score = 1.0
+        for (left, low), (right, high) in zip(anchors, anchors[1:]):
+            if gap <= right:
+                gap_score = low + (high-low) * max(0, gap-left)/(right-left)
+                break
+        transition = semantics.semantic_transition_score
+        closure = transition
+        confidence = semantics.confidence
+        confirmed_boundary = False
+        if isinstance(semantics, Phase2Semantics):
+            from interlude.services.scene_builder import scene_grouping_reasons
+            confirmed_boundary = not scene_grouping_reasons(semantics, self.settings)
+            transition = min(1, transition + (0.2 if confirmed_boundary else 0))
+            closure = {"scene_concluding": 1.0, "ongoing": 0.5, "uncertain": 0.35}[semantics.narrative_state]
+            if semantics.dialogue_continuity in ("completed", "no_dialogue"):
+                closure = max(closure, 0.65)
+            elif semantics.dialogue_continuity == "continuing":
+                closure *= 0.3
+            confidence = (confidence + semantics.transition_confidence)/2
+        components = {"visual": candidate.raw_boundary_score,
+            "dialogue_gap": gap_score if not candidate.speech_active else 0,
+            "semantic_transition": transition, "narrative_closure": closure,
+            "shot_stability": min(candidate.surrounding_shot_sec / 4, 1), "confidence": confidence}
         weights = self.settings.weights
         normalized = {k: v / sum(weights.values()) for k, v in weights.items()}
         score = sum(components[k] * normalized[k] for k in components) if safe else 0
-        return {"score": score, "components": components, "weights": normalized, "dialogue_safe": safe}
+        return {"score": score, "components": components, "weights": normalized, "dialogue_safe": safe,
+                "confirmed_semantic_boundary": confirmed_boundary, "nearby_gap_sec": gap,
+                "quality_floor": self.settings.min_where_score,
+                "survival_reasons": ["no_exact_speech_crossing", "quality_signals_combined"] if safe else []}
+
 
 
 class PacingService:

@@ -37,6 +37,13 @@ class GroqWhisperProvider:
                 raise ValueError("missing timestamp segments")
             words = [Word(start_sec=w["start"], end_sec=w["end"], text=w["word"])
                      for w in raw.get("words", []) if w["end"] > w["start"]]
-            return Transcript(segments=[TranscriptSegment(start_sec=s["start"], end_sec=s["end"], text=s["text"],
-                words=[w for w in words if w.start_sec >= s["start"] and w.end_sec <= s["end"]]) for s in segments])
+            normalized = [TranscriptSegment(start_sec=s["start"], end_sec=s["end"], text=s["text"]) for s in segments]
+            if words and not normalized:
+                raise ValueError("words without transcript segments")
+            # Provider word and segment envelopes can disagree. Preserve every valid
+            # word once, including words straddling or outside segment envelopes.
+            for word in words:
+                segment = min(normalized, key=lambda s: max(s.start_sec-word.end_sec, word.start_sec-s.end_sec, 0))
+                segment.words.append(word)
+            return Transcript(segments=normalized)
         return retry(request, "asr", self.settings.asr_max_retries, self.sleep)

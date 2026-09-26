@@ -2,7 +2,7 @@
 
 Context-aware multimodal ad placement & intelligent brand matching for long-form media.
 
-Phase 2 uploads a short Bengali H.264 MP4, groups raw shots conservatively, combines ASR/VAD and semantic dialogue safety, carries recent sensitive context, independently verifies eligible brands, and optimizes a global ad schedule. Canonical decisions produce JSON and VMAP. The plain Next.js player pauses source content, plays the selected MP4 creative and resumes at the captured position. Returning **no ad break** is valid.
+Phase 2 uploads a short Bengali H.264 MP4, groups raw shots conservatively, hard-blocks exact ASR-word/VAD speech crossings and scores transition quality, carries recent sensitive context, independently verifies eligible brands, and optimizes a global ad schedule. Canonical decisions produce JSON and VMAP. The plain Next.js player pauses source content, plays the selected MP4 creative and resumes at the captured position. Returning **no ad break** is valid when no safe opportunity clears the combined quality floor. See [ranked placement policy](docs/PHASE2.md).
 
 ## Requirements
 

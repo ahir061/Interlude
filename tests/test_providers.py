@@ -85,3 +85,15 @@ def test_asr_reversed_timestamp_is_not_trusted(tmp_path):
         json={"text": "কথা", "segments": [{"start": 8, "end": 3, "text": "কথা"}]})))
     with pytest.raises(ProviderError, match="asr_invalid_response"):
         GroqWhisperProvider(settings(), client, sleep=lambda _: None).transcribe(path)
+
+
+def test_asr_preserves_word_crossing_a_segment_envelope_edge(tmp_path):
+    path = tmp_path / "audio.wav"
+    path.write_bytes(b"test")
+    client = httpx.Client(transport=httpx.MockTransport(lambda r: httpx.Response(200, json={
+        "text": "crossing", "segments": [{"start": 1, "end": 3, "text": "crossing"}],
+        "words": [{"start": 2.8, "end": 3.2, "word": "crossing"}]})))
+    transcript = GroqWhisperProvider(settings(), client).transcribe(path)
+    from interlude.services.scene_builder import DialogueSafetyGate
+    gate = DialogueSafetyGate(settings()).evaluate(3.1, transcript, [], 10)
+    assert not gate["safe"] and gate["asr_word_crossing_boundary"]

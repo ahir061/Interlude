@@ -56,6 +56,11 @@ def test_real_phase2_media_pipeline_and_independent_safety_fallback(media):
     assert len(list((s.reports_dir/"inspection").rglob("*.mp4"))) == 1
     paths = ManifestService().write(result, s.data_dir/"outputs"/"test")
     assert paths["vmap"].exists()
+    rows = json.loads((paths["debug"].parent / "candidates.json").read_text())
+    assert len(rows) == len(result.candidates)
+    assert rows[0]["rank"] == 1 and rows[0]["final_decision"] == "AD"
+    assert rows[0]["hard_blocked"] is False
+    assert rows[0]["dialogue_gap_score"] == 1
     assert not list((s.data_dir/"work").iterdir())
 
 
@@ -66,10 +71,11 @@ def test_all_safety_uncertain_yields_no_ad(media):
     assert "no_safe_brand" in result.decisions[0].rejection_reasons
 
 
-def test_semantic_dialogue_continuation_never_gets_where_score(media):
+def test_semantic_continuation_is_scored_without_forcing_scene_split(media):
     source, s = media
     result = Phase2Pipeline(s, SilentAsr(), Perception(continuity="continuing")).run("test", source, lambda _: None)
-    assert result.decisions[0].where_score == 0 and not result.decisions[0].accepted
+    assert result.decisions[0].where_score > 0
+    assert result.decisions[0].debug["where"]["components"]["narrative_closure"] < 0.5
     assert len(result.scenes) == 1
 
 
@@ -101,3 +107,30 @@ def test_runtime_unseen_brand_i_vocabulary_safety_ranking_and_creative(tmp_path)
     assert not blocked.eligible and blocked.score is None
     generated = CreativeService(s).ensure([brand_i])[0].creatives[0]
     assert generated.generated and generated.duration_sec == 6
+
+
+def test_moderate_same_scene_opportunity_and_low_relevance_can_be_selected(media):
+    class ModeratePerception(Perception):
+        def perceive(self, frames, transcript, vocab, timestamp, *args):
+            return semantics(dominant_activity="walking", contexts=["walking"], narrative_state="ongoing",
+                transition_type="camera_angle", semantic_transition_score=0.55, transition_confidence=0.55,
+                confidence=0.6, evidence=[{"timestamp_sec": timestamp, "observation": "dialogue completes at cut"}])
+    source, s = media
+    result = Phase2Pipeline(s, SilentAsr(), ModeratePerception()).run("test", source, lambda _: None)
+    decision = result.decisions[0]
+    assert decision.accepted and decision.brand_match_score == 0
+    assert len(result.scenes) == 1
+    assert not decision.debug["hard_blocked"] and decision.debug["rank"] == 1
+    assert decision.debug["why_survived"] and decision.debug["final_decision"] == "AD"
+
+
+def test_semantic_failure_cannot_create_contextually_targeted_ad(media):
+    class FailedPerception(Perception):
+        def perceive(self, *args):
+            raise ProviderError("semantic_invalid_response")
+    source, s = media
+    result = Phase2Pipeline(s, SilentAsr(), FailedPerception()).run("test", source, lambda _: None)
+    decision = result.decisions[0]
+    assert not decision.accepted
+    assert decision.debug["hard_blocked"]
+    assert "scene_context_unresolved" in decision.debug["hard_block_reason"]

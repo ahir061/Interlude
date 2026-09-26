@@ -40,23 +40,30 @@ class Settings(BaseSettings):
     max_breaks_per_hour: int = Field(default=12, ge=0)
     min_break_gap_sec: float = Field(default=30, ge=0)
     max_ad_load_percent: float = Field(default=10, ge=0, le=100)
+    # Legacy Phase 1 compatibility; no Phase 2 silence/shot/edge vetoes.
     min_dialogue_gap_sec: float = Field(default=0.5, ge=0.1)
     min_scene_sec: float = Field(default=2, ge=0.1)
     min_edge_gap_sec: float = Field(default=10, ge=0)
-    min_where_score: float = Field(default=0.65, ge=0, le=1)
+    min_where_score: float = Field(default=0.55, ge=0, le=1)
     min_semantic_confidence: float = Field(default=0.7, ge=0, le=1)
     min_brand_score: float = Field(default=0.15, ge=0, le=1)
-    where_boundary_weight: float = Field(default=0.2, ge=0)
-    where_dialogue_weight: float = Field(default=0.25, ge=0)
+    where_boundary_weight: float = Field(default=0.25, ge=0)
+    where_dialogue_weight: float = Field(default=0.2, ge=0)
+    # Legacy setting; nearby gap now has a single dialogue-gap weight.
     where_silence_weight: float = Field(default=0.2, ge=0)
-    where_semantic_weight: float = Field(default=0.35, ge=0)
+    where_semantic_weight: float = Field(default=0.2, ge=0)
+    where_closure_weight: float = Field(default=0.2, ge=0)
+    where_stability_weight: float = Field(default=0.1, ge=0)
+    where_confidence_weight: float = Field(default=0.05, ge=0)
     scene_threshold: float = Field(default=27, gt=0)
     max_upload_mb: int = Field(default=250, gt=0)
     max_video_duration_sec: float = Field(default=300, gt=0)
     cors_origins: list[str] = ["http://localhost:3000"]
     worker_lease_sec: int = Field(default=900, ge=300)
+    # Deprecated silence gates, retained for configuration compatibility only.
     min_pre_cut_silence_ms: int = Field(default=500, ge=100)
     min_post_cut_silence_ms: int = Field(default=500, ge=100)
+    # Semantic scene grouping only, never ad-slot eligibility.
     min_transition_confidence: float = Field(default=0.8, ge=0, le=1)
     min_transition_score: float = Field(default=0.65, ge=0, le=1)
     sensitive_context_window_sec: float = Field(default=90, ge=0)
@@ -90,8 +97,9 @@ class Settings(BaseSettings):
 
     @property
     def weights(self) -> dict[str, float]:
-        return {"boundary": self.where_boundary_weight, "dialogue": self.where_dialogue_weight,
-                "silence": self.where_silence_weight, "semantic": self.where_semantic_weight}
+        return {"visual": self.where_boundary_weight, "dialogue_gap": self.where_dialogue_weight,
+                "semantic_transition": self.where_semantic_weight, "narrative_closure": self.where_closure_weight,
+                "shot_stability": self.where_stability_weight, "confidence": self.where_confidence_weight}
 
     def database_url(self) -> URL:
         return URL.create("mysql+pymysql", username=self.db_user, password=self.db_password.get_secret_value(),
