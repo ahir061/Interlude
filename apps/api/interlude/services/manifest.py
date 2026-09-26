@@ -5,10 +5,14 @@ from interlude.domain import AdBreak, AnalysisManifest, AnalysisResult
 
 
 class ManifestService:
+    def __init__(self, media_base_url: str = "http://localhost:8000"):
+        self.media_base_url = media_base_url
+
     def build(self, result: AnalysisResult) -> AnalysisManifest:
         accepted = sorted((d for d in result.decisions if d.accepted), key=lambda d: d.timestamp_sec)
         return AnalysisManifest(video=result.video, summary={
             "scene_count": len(result.scenes), "candidate_count": len(result.candidates),
+            "raw_shot_count": len(result.raw_shots) if result.raw_shots else len(result.scenes),
             "prefilter_rejected_count": sum(c.prefilter_status == "REJECTED" for c in result.candidates),
             "semantic_candidates_analyzed": sum(d.semantics is not None for d in result.decisions),
             "semantic_candidates_attempted": sum(c.prefilter_status == "SURVIVED" for c in result.candidates),
@@ -30,4 +34,10 @@ class ManifestService:
             temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
             temporary.replace(target)
             artifacts[name] = target
+        from interlude.services.vmap import VMAPSerializer
+        vmap = output / "manifest.vmap.xml"
+        temporary = vmap.with_suffix(".tmp")
+        temporary.write_bytes(VMAPSerializer(self.media_base_url).serialize(result.decisions))
+        temporary.replace(vmap)
+        artifacts["vmap"] = vmap
         return artifacts
