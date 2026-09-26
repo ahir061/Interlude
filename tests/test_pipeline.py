@@ -1,4 +1,3 @@
-import pytest
 from interlude.config import Settings
 from interlude.domain import JobStatus, BreakCandidate
 from interlude.pipeline import analyze_candidate, transition_allowed
