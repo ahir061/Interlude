@@ -1,7 +1,9 @@
 from datetime import datetime, timezone
+import time
+import pymysql
 
 from sqlalchemy import (JSON, DateTime, ForeignKey, Index, Integer, String, Text,
-                        create_engine)
+                        create_engine, event)
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 from interlude.config import Settings
 
@@ -88,10 +90,25 @@ class ArtifactRow(Base):
     path: Mapped[str] = mapped_column(Text)
 
 
+def connect_with_retry(connect, sleep=time.sleep):
+    """Retry only opening a connection; never replay an ambiguous transaction."""
+    for attempt in range(3):
+        try:
+            return connect()
+        except pymysql.OperationalError as exc:
+            if not exc.args or exc.args[0] not in (2002, 2003, 2006, 2013) or attempt == 2:
+                raise
+            sleep(2**attempt)
+
+
 def make_engine(settings: Settings):
-    return create_engine(settings.database_url(), pool_pre_ping=True, pool_recycle=1800,
+    engine = create_engine(settings.database_url(), pool_pre_ping=True, pool_recycle=1800,
                          connect_args={"connect_timeout": 10, "read_timeout": 30, "write_timeout": 30},
                          hide_parameters=True)
+    @event.listens_for(engine, "do_connect")
+    def connect(dialect, connection_record, args, kwargs):
+        return connect_with_retry(lambda: dialect.connect(*args, **kwargs))
+    return engine
 
 
 def sessions(settings: Settings):

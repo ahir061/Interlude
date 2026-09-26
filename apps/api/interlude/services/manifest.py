@@ -22,7 +22,9 @@ class ManifestService:
                         creative_id=d.selected_creative_id, creative_url=d.creative_url,
                         duration_sec=d.creative_duration_sec, where=d.debug.get("where", {}),
                         whether=d.debug.get("whether", {}), what={"score": d.brand_match_score,
-                            "brand_matches": [m.model_dump() for m in d.brand_matches]}) for d in accepted])
+                            "brand_matches": [m.model_dump() for m in d.brand_matches],
+                            "brands": d.debug.get("brands", []),
+                            "safety_verification": d.debug.get("brand_safety_verification", [])}) for d in accepted])
 
     def write(self, result: AnalysisResult, output: Path) -> dict[str, Path]:
         output.mkdir(parents=True, exist_ok=True)

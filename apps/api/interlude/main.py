@@ -12,7 +12,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from sqlalchemy import select, text
 
 from interlude.config import Settings, get_settings
-from interlude.db import (ArtifactRow, CandidateRow, DecisionRow, JobRow, SceneRow, TranscriptRow,
+from interlude.db import (ArtifactRow, CandidateRow, DecisionRow, JobRow, ObservationRow, SceneRow, ShotRow, TranscriptRow,
                           VideoRow, sessions)
 from interlude.repository import Repository
 from interlude.services.brands import load_brands
@@ -143,7 +143,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                     raise HTTPException(409, "analysis_not_completed")
                 return {"job": repo.serialize_job(row).model_dump(), **{name: [item.payload for item in
                     session.scalars(select(table).where(table.job_id == row.id)).all()] for name, table in
-                    (("scenes", SceneRow), ("transcript_segments", TranscriptRow),
+                    (("raw_shots", ShotRow), ("semantic_observations", ObservationRow),
+                     ("scenes", SceneRow), ("transcript_segments", TranscriptRow),
                      ("candidates", CandidateRow), ("decisions", DecisionRow))}}
             item = session.scalars(select(ArtifactRow).where(ArtifactRow.job_id == row.id,
                                                              ArtifactRow.kind == kind)).first()
