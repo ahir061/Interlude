@@ -1,4 +1,7 @@
-# Interlude
+# Interlude — Episode Studio
+
+Phase 3 supports complete Bengali episodes, semantic scene review, ranked safe placements and a protected team workspace. Start with the [Phase 3 deployment and operations guide](docs/PHASE3.md). The current branch is `feat/phase3`; earlier phase evidence below is historical.
+
 
 Context-aware multimodal ad placement & intelligent brand matching for long-form media.
 

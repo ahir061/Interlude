@@ -3,8 +3,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg libgl1 l
 WORKDIR /app
 COPY --from=ghcr.io/astral-sh/uv:0.11 /uv /usr/local/bin/uv
 COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-cache --no-install-project
 COPY apps/api apps/api
-RUN uv sync --frozen --no-dev --no-cache
+ENV PYTHONPATH=/app/apps/api
 COPY alembic.ini ./
 COPY scripts scripts
 COPY content-sample-assets-folder/brands.json content-sample-assets-folder/brands.json
