@@ -25,7 +25,7 @@ class WhereService:
             confirmed_boundary = not scene_grouping_reasons(semantics, self.settings)
             transition = min(1, transition + (0.2 if confirmed_boundary else 0))
             closure = {"scene_concluding": 1.0, "ongoing": 0.5, "uncertain": 0.35}[semantics.narrative_state]
-            if semantics.dialogue_continuity in ("completed", "no_dialogue"):
+            if semantics.dialogue_continuity == "completed":
                 closure = max(closure, 0.65)
             elif semantics.dialogue_continuity == "continuing":
                 closure *= 0.3
@@ -37,7 +37,19 @@ class WhereService:
         weights = self.settings.weights
         normalized = {k: v / sum(weights.values()) for k, v in weights.items()}
         score = sum(components[k] * normalized[k] for k in components) if safe else 0
+        interruption_penalty = 0.0
+        if (safe and isinstance(semantics, Phase2Semantics)
+                and semantics.narrative_state == "ongoing" and not confirmed_boundary
+                and semantics.dialogue_continuity != "completed"):
+            # Silence is not closure. Long pauses gradually relax this preference;
+            # it is a score adjustment, never another safety gate.
+            long_pause = self.settings.sequence_long_pause_sec
+            relief = min(1.0, max(0.0, (gap - long_pause * 0.4) / (long_pause * 0.6)))
+            interruption_penalty = self.settings.sequence_interruption_penalty * (1 - relief)
+        base_score = score
+        score = max(0.0, score - interruption_penalty)
         return {"score": score, "components": components, "weights": normalized, "dialogue_safe": safe,
+                "base_score": base_score, "sequence_interruption_penalty": interruption_penalty,
                 "confirmed_semantic_boundary": confirmed_boundary, "nearby_gap_sec": gap,
                 "quality_floor": self.settings.min_where_score,
                 "survival_reasons": ["no_exact_speech_crossing", "quality_signals_combined"] if safe else []}

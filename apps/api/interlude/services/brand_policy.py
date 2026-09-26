@@ -1,6 +1,21 @@
 from interlude.config import Settings
 from interlude.domain import Brand, BrandEvaluation, ContextSnapshot, Phase2Semantics
 from interlude.services.brands import contains, negative_match, normalize
+import re
+
+
+def activity_evidence(description: str) -> str:
+    """Separate the performed action from incidental scenery in model prose."""
+    action = re.split(r"\b(?:in|at|with|against|followed by)\b", description, maxsplit=1,
+                      flags=re.IGNORECASE)[0]
+    # General activity vocabulary, independent of brand IDs or catalog size.
+    concepts = {
+        "food": ("eating", "cooking", "dining", "serving food", "serving tea", "preparing food"),
+        "automotive mobility": ("driving", "car", "motorcycle", "automobile"),
+        "travel": ("boat journey", "boat ride", "sightseeing", "vacation", "travelling", "traveling"),
+    }
+    return action + " " + " ".join(label for label, terms in concepts.items()
+                                    if any(contains(action, term) for term in terms))
 
 
 class BrandEligibilityEngine:
@@ -30,15 +45,17 @@ class BrandRankingEngine:
         weights = {"dominant_activity": s.brand_activity_weight, "target_overlap": s.brand_target_weight,
                    "category_relevance": s.brand_category_weight, "secondary_relevance": s.brand_secondary_weight}
         by_id = {b.brand_id: b for b in brands}
+        action = activity_evidence(semantics.dominant_activity)
         results = []
         for entry in eligibility:
             entry = entry.model_copy(deep=True)
             if entry.eligible:
                 brand = by_id[entry.brand_id]
-                activity = float(any(contains(semantics.dominant_activity, t) for t in brand.target_contexts))
+                category_match = any(contains(action, c) for c in brand.category.split("/"))
+                activity = float(category_match or any(contains(action, t) for t in brand.target_contexts))
                 overlap = sum(any(contains(c, t) for c in semantics.contexts) for t in brand.target_contexts)
                 components = {"dominant_activity": activity, "target_overlap": min(overlap/3, 1),
-                    "category_relevance": float(any(contains(semantics.dominant_activity, c) for c in brand.category.split("/"))),
+                    "category_relevance": float(category_match),
                     "secondary_relevance": float(overlap > 0)}
                 entry.components = components
                 relevance = sum(components[k]*weights[k] for k in components)/sum(weights.values())

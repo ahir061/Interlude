@@ -132,3 +132,16 @@ def test_negative_conflict_blocks_brand_not_every_other_brand():
     results = BrandEligibilityEngine().evaluate(scene, memory.snapshot(30, scene), brands)
     assert not results[0].eligible and results[0].hard_blocks == ["grief"]
     assert results[1].eligible
+
+
+def test_dominant_action_beats_incidental_scenery_with_unseen_brand():
+    s = Settings(_env_file=None)
+    brands = [Brand(brand_id='unseen_food', display_name='Synthetic Food', category='food', target_contexts=['cooking']),
+              Brand(brand_id='unseen_travel', display_name='Synthetic Travel', category='travel', target_contexts=['mountains', 'resort'])]
+    scene = semantics(dominant_activity='Serving tea and socializing in a mountain resort setting', contexts=['food', 'resort', 'mountains'])
+    eligible = BrandEligibilityEngine().evaluate(scene, ContextMemory(s).snapshot(30, scene), brands)
+    assert BrandRankingEngine(s).rank(scene, brands, eligible)[0].brand_id == 'unseen_food'
+    blocked = scene.model_copy(update={'sensitive_contexts': ['funeral']})
+    brands[0].negative_contexts = ['funeral']
+    eligible = BrandEligibilityEngine().evaluate(blocked, ContextMemory(s).snapshot(30, blocked), brands)
+    assert not next(x for x in eligible if x.brand_id == 'unseen_food').eligible

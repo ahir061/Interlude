@@ -64,3 +64,19 @@ def test_weak_combination_stays_below_floor():
         dialogue_continuity="continuing", transition_type="none", semantic_transition_score=0.1,
         transition_confidence=0.2, confidence=0.5))
     assert result["score"] < Settings(_env_file=None).min_where_score
+
+
+def test_ongoing_sequence_short_pause_loses_to_closure_but_long_pause_survives():
+    s = Settings(_env_file=None)
+    c = candidate().model_copy(update={'silence_before_sec': 2, 'silence_after_sec': 2,
+                                      'raw_boundary_score': 1, 'surrounding_shot_sec': 3.6})
+    ongoing = semantics(narrative_state='ongoing', dialogue_continuity='continuing',
+                        transition_type='none', semantic_transition_score=0.1)
+    short = WhereService(s).score(c, ongoing)
+    assert short['dialogue_safe'] and short['sequence_interruption_penalty'] > 0
+    assert short['score'] < s.min_where_score
+    complete = WhereService(s).score(c, ongoing.model_copy(update={
+        'narrative_state': 'scene_concluding', 'dialogue_continuity': 'completed'}))
+    assert complete['score'] > s.min_where_score
+    long = WhereService(s).score(c.model_copy(update={'silence_before_sec': 12, 'silence_after_sec': 12}), ongoing)
+    assert long['sequence_interruption_penalty'] == 0 and long['score'] > s.min_where_score
