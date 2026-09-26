@@ -11,6 +11,7 @@ def test_generated_fallback_creative_exists(tmp_path):
     brands = CreativeService(settings).ensure([Brand(brand_id="ninth", display_name="Ninth", category="cooking")])
     creative = brands[0].creatives[0]
     assert creative.generated
+    assert getattr(creative, "width", None) == 640 and getattr(creative, "height", None) == 360
     assert 5 <= creative.duration_sec <= 10
     assert MediaProbeService(settings).probe(creative.local_path, "ad").codec == "h264"
 

@@ -40,3 +40,14 @@ def test_vmap_uses_only_accepted_normalized_decisions():
     assert root.find(".//Ad").attrib["id"] == "new"
     assert root.find(".//Creative").attrib["id"] == "creative"
     assert root.find(".//MediaFile").text == "http://localhost:8000/api/ads/new/creative"
+
+
+def test_vmap_preserves_supplied_creative_dimensions_through_optimizer():
+    creative = Creative(creative_id="full_hd", duration_sec=6, url="/api/ads/new/full_hd")
+    assert hasattr(creative, "width")
+    creative.width, creative.height = 1920, 1080
+    decisions = [BreakDecision(candidate_id="slot", timestamp_sec=30)]
+    GlobalBreakOptimizer(Settings(_env_file=None)).finalize(decisions,
+        [PlacementOption("slot", 30, "new", 1, 0.9, creative)], 120)
+    media = ET.fromstring(VMAPSerializer().serialize(decisions)).find(".//MediaFile")
+    assert media.attrib["width"] == "1920" and media.attrib["height"] == "1080"

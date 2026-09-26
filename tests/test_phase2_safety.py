@@ -73,6 +73,20 @@ def test_narrative_carryover_outlives_temporal_window():
     assert memory.snapshot(25, semantics(sensitive_context_continuing=True)).recent_sensitive_contexts
 
 
+@pytest.mark.parametrize("expired", [False, True])
+def test_unresolved_continuing_sensitivity_blocks_brands_and_carries_forward(expired):
+    memory = ContextMemory(Settings(_env_file=None, sensitive_context_window_sec=10))
+    if expired:
+        memory.observe(1, semantics(sensitive_contexts=["grief"]))
+    current = semantics(sensitive_context_continuing=True)
+    memory.observe(30, current)
+    brand = Brand(brand_id="food", display_name="Food", category="food", negative_contexts=["funeral"])
+    result = BrandEligibilityEngine().evaluate(current, memory.snapshot(30, current), [brand])[0]
+    assert not result.eligible and result.score is None
+    memory.observe(35, semantics())
+    assert memory.snapshot(35, semantics()).uncertain
+
+
 def test_driving_dominates_secondary_phone_context():
     s = Settings(_env_file=None)
     scene = semantics(dominant_activity="driving", contexts=["phone", "family conversation", "travel"])

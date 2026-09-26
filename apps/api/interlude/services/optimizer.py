@@ -73,6 +73,7 @@ class GlobalBreakOptimizer:
             decision.selected_creative_id = option.creative.creative_id
             decision.creative_url = option.creative.url
             decision.creative_duration_sec = option.creative.duration_sec
+            decision.debug["creative_dimensions"] = {"width": option.creative.width, "height": option.creative.height}
             decision.brand_match_score = option.brand_score
             decision.whether_pass = True
             decision.rejection_reasons = []

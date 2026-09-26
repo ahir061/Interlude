@@ -30,7 +30,9 @@ class CreativeService:
                 if not target.exists():
                     self._generate(brand, target)
                     marker.write_text("synthetic development creative, 6 seconds\n")
-                creative.duration_sec = MediaProbeService(self.settings).probe(target, creative.creative_id).duration_sec
+                metadata = MediaProbeService(self.settings).probe(target, creative.creative_id)
+                creative.duration_sec = metadata.duration_sec
+                creative.width, creative.height = metadata.width, metadata.height
                 creative.local_path = str(target.resolve())
                 creative.url = f"/api/ads/{brand.brand_id}/{creative.creative_id}"
                 creative.generated = marker.exists()

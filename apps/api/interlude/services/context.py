@@ -26,6 +26,10 @@ class ContextMemory:
         sensitive.update(c for c in self.vocabulary if any(negative_match(text, c) for text in observed))
         for context in sensitive:
             self.recent[context] = (timestamp, semantics.sensitive_context_continuing)
+        if semantics.sensitive_context_continuing and not any(
+                timestamp-seen <= self.settings.sensitive_context_window_sec for seen, _ in self.recent.values()):
+            # Affirmative sensitivity with no resolvable label must not become a clean snapshot.
+            self.last_failure = timestamp
 
     def snapshot(self, timestamp: float, semantics: Phase2Semantics) -> ContextSnapshot:
         recent = [RecentContext(context=c, last_seen_sec=t, distance_sec=timestamp-t, narratively_continuing=continuing)

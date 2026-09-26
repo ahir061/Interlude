@@ -39,7 +39,9 @@ class VMAPSerializer:
             linear = ET.SubElement(creative, "Linear")
             ET.SubElement(linear, "Duration").text = clock_time(d.creative_duration_sec)
             media = ET.SubElement(linear, "MediaFiles")
+            dimensions = d.debug.get("creative_dimensions", {})
             ET.SubElement(media, "MediaFile", delivery="progressive", type="video/mp4",
-                          width="640", height="360", scalable="true", maintainAspectRatio="true").text = urljoin(self.media_base_url, d.creative_url)
+                          width=str(dimensions.get("width") or 640), height=str(dimensions.get("height") or 360),
+                          scalable="true", maintainAspectRatio="true").text = urljoin(self.media_base_url, d.creative_url)
         ET.indent(root)
         return ET.tostring(root, encoding="utf-8", xml_declaration=True)

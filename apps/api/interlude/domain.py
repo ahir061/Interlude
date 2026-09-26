@@ -151,6 +151,8 @@ class Creative(Model):
     url: str = ""
     local_path: str | None = None
     generated: bool = False
+    width: int | None = Field(default=None, gt=0)
+    height: int | None = Field(default=None, gt=0)
     model_config = ConfigDict(extra="forbid", populate_by_name=True, validate_assignment=True)
 
 
