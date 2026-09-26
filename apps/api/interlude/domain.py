@@ -108,6 +108,11 @@ class Phase2Semantics(SceneSemantics):
     sensitive_context_continuing: bool
 
 
+class BrandExplanation(Model):
+    summary: str = Field(min_length=1, max_length=1200)
+    confidence: Score
+
+
 class SafetyVerdict(Model):
     verdict: Literal["SAFE", "BLOCKED", "UNCERTAIN"]
     confidence: Score

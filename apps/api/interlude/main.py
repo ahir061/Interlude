@@ -209,6 +209,32 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def debug(video_id: UUID):
         return artifact(video_id, "debug")
 
+    @app.post("/api/videos/{video_id}/candidates/{candidate_id}/explanation")
+    def brand_explanation(video_id: UUID, candidate_id: str):
+        from interlude.providers.perception import PerceptionClient
+        from interlude.providers.base import ProviderError
+        result = artifact(video_id, "debug")
+        if not isinstance(result, FileResponse):
+            raise HTTPException(409, "analysis_not_completed")
+        data = json.loads(Path(result.path).read_text())
+        decision = next((d for d in data['decisions'] if d['candidate_id'] == candidate_id), None)
+        if not decision or not decision['accepted']:
+            raise HTTPException(404, "selected_placement_not_found")
+        brand = next((b for b in load_brands(settings.brands_path)
+                      if b.brand_id == decision['selected_brand_id']), None)
+        if brand is None:
+            raise HTTPException(409, "selected_brand_not_in_catalogue")
+        safety = [v for v in decision['debug'].get('brand_safety_verification', [])
+                  if v['brand_id'] == brand.brand_id]
+        payload = {'brand': brand.model_dump(mode='json'), 'scene': decision['semantics'],
+                   'ranking': decision['debug'].get('brands', []), 'safety': safety}
+        try:
+            explanation = PerceptionClient(settings).explain_selection(payload)
+        except ProviderError:
+            raise HTTPException(503, "brand_explanation_unavailable") from None
+        return {'brand_id': brand.brand_id, 'source': 'Qwen', **explanation.model_dump(),
+                'evidence': (decision['semantics'] or {}).get('evidence', []), 'safety': safety}
+
     @app.get("/api/brands")
     def brands():
         return [b.model_dump() for b in load_brands(settings.brands_path)]
