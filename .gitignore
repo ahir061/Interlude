@@ -21,3 +21,6 @@ data/*
 .DS_Store
 content-sample-assets-folder/*.mp4
 *.tsbuildinfo
+reports/inspection/
+reports/*.json
+reports/*.md

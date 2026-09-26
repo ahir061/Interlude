@@ -27,6 +27,9 @@ class JobRow(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     video_id: Mapped[str] = mapped_column(ForeignKey("videos.id"), index=True)
     status: Mapped[str] = mapped_column(String(32), default="QUEUED")
+    state: Mapped[str] = mapped_column(String(16), default="QUEUED", server_default="QUEUED")
+    lease_token: Mapped[str | None] = mapped_column(String(36))
+    heartbeat_at: Mapped[datetime | None] = mapped_column(DateTime)
     error_code: Mapped[str | None] = mapped_column(String(120))
     error_stage: Mapped[str | None] = mapped_column(String(32))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=now)
@@ -42,6 +45,14 @@ class AnalysisItem:
 
 class SceneRow(AnalysisItem, Base):
     __tablename__ = "scenes"
+
+
+class ShotRow(AnalysisItem, Base):
+    __tablename__ = "raw_shots"
+
+
+class ObservationRow(AnalysisItem, Base):
+    __tablename__ = "semantic_observations"
 
 
 class TranscriptRow(AnalysisItem, Base):

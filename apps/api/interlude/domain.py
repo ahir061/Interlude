@@ -241,6 +241,8 @@ class AnalysisJob(Model):
     status: JobStatus
     error_code: str | None = None
     error_stage: str | None = None
+    state: str = "QUEUED"
+    processing_stage: str | None = None
 
 
 class AdBreak(Model):

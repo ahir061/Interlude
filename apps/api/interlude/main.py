@@ -3,6 +3,8 @@ import logging
 import shutil
 from pathlib import Path
 from uuid import UUID, uuid4
+from contextlib import asynccontextmanager
+import time
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,11 +20,19 @@ from interlude.services.media import MediaError, MediaProbeService
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
+    production_configuration = settings is None
     settings = settings or get_settings()
     settings.prepare_dirs()
     session_factory = sessions(settings)
     repo = Repository(session_factory)
-    app = FastAPI(title="Interlude", debug=False)
+    @asynccontextmanager
+    async def lifespan(app):
+        if production_configuration:
+            from interlude.runtime import validate_environment
+            validate_environment(settings)
+        yield
+        session_factory.kw["bind"].dispose()
+    app = FastAPI(title="Interlude", debug=False, lifespan=lifespan)
     app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins,
                        allow_methods=["GET", "POST"], allow_headers=["Content-Type"])
 
@@ -54,7 +64,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         try:
             with session_factory() as session:
                 checks["database"] = session.execute(text("SELECT 1")).scalar() == 1
-                checks["migrations"] = session.execute(text("SELECT version_num FROM alembic_version")).scalar() == "0001_phase1"
+                checks["migrations"] = session.execute(text("SELECT version_num FROM alembic_version")).scalar() == "0002_phase2"
         except Exception:
             checks["database"] = False
             checks["migrations"] = False
@@ -63,6 +73,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.post("/api/videos", status_code=202)
     def upload(file: UploadFile = File(...)):
+        validation_started = time.perf_counter()
         if not file.filename or Path(file.filename).suffix.lower() != ".mp4":
             raise HTTPException(415, "mp4_required")
         video_id = str(uuid4())
@@ -86,7 +97,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             if metadata.codec != "h264":
                 raise HTTPException(415, "phase1_requires_h264_mp4")
             with session_factory.begin() as session:
-                session.add(VideoRow(id=video_id, path=str(path.resolve()), metadata_json=metadata.model_dump()))
+                session.add(VideoRow(id=video_id, path=str(path.resolve()), metadata_json={**metadata.model_dump(),
+                    "upload_validation_sec": time.perf_counter()-validation_started}))
                 job = JobRow(id=str(uuid4()), video_id=video_id, status="QUEUED")
                 session.flush()
                 session.add(job)
@@ -98,9 +110,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             file.file.close()
 
     @app.post("/api/videos/{video_id}/analyze", status_code=202)
-    def analyze(video_id: UUID):
+    def analyze(video_id: UUID, force: bool = False):
         try:
-            return repo.enqueue(str(video_id))
+            return repo.enqueue(str(video_id), force=force)
         except KeyError:
             raise HTTPException(404, "video_not_found") from None
 
@@ -137,7 +149,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                                                              ArtifactRow.kind == kind)).first()
             if not item or not Path(item.path).is_file():
                 raise HTTPException(404, "artifact_not_found")
-            return FileResponse(item.path, media_type="application/json")
+            return FileResponse(item.path, media_type="application/xml" if kind == "vmap" else "application/json")
+
+    @app.get("/api/videos/{video_id}/vmap")
+    def vmap(video_id: UUID):
+        return artifact(video_id, "vmap")
 
     @app.get("/api/videos/{video_id}/analysis")
     def analysis(video_id: UUID):
