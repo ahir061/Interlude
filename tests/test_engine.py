@@ -75,6 +75,17 @@ def test_unknown_sensitive_context_rejects_uncertainty():
     assert not match.eligible
 
 
+def test_plural_negative_context_in_narrative_is_hard_block():
+    match = BrandMatchingService().evaluate(semantics(
+        narrative_state_before="The family is mourning after attending funerals"), [brand()])[0]
+    assert not match.eligible and match.final_score == 0
+
+
+def test_mourning_synonym_is_hard_block():
+    match = BrandMatchingService().evaluate(semantics(mood=["mourning"]), [brand()])[0]
+    assert not match.eligible
+
+
 def test_new_ninth_brand_is_loaded_without_source_change(tmp_path):
     records = [brand(brand_id=f"b{i}").model_dump() for i in range(9)]
     records[8]["target_contexts"] = ["cooking"]

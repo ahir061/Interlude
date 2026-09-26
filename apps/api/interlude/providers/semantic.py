@@ -48,7 +48,8 @@ class QwenSemanticProvider:
             content.append({"type": "text", "text": f"Frame timestamp: {frame.timestamp_sec:.3f} seconds"})
             encoded = base64.b64encode(Path(frame.path).read_bytes()).decode("ascii")
             content.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{encoded}"}})
-        payload = {"model": self.settings.llm_model, "temperature": 0, "max_tokens": 1200,
+        payload = {"model": self.settings.llm_model, "temperature": 0, "max_tokens": self.settings.llm_max_tokens,
+                   "chat_template_kwargs": {"enable_thinking": self.settings.llm_enable_thinking},
                    "messages": [{"role": "system", "content": instructions}, {"role": "user", "content": content}]}
         if self.settings.llm_json_mode:
             payload["response_format"] = {"type": "json_object"}

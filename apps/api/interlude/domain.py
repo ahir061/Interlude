@@ -182,6 +182,7 @@ class AnalysisJob(Model):
 class AdBreak(Model):
     candidate_id: str
     timestamp_sec: Seconds
+    latest_start_sec: Seconds
     brand_id: str
     creative_id: str
     creative_url: str

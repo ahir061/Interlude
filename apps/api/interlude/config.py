@@ -31,6 +31,8 @@ class Settings(BaseSettings):
     llm_request_timeout_sec: float = Field(default=120, gt=0)
     llm_max_retries: int = Field(default=3, ge=0, le=5)
     llm_json_mode: bool = True
+    llm_enable_thinking: bool = False
+    llm_max_tokens: int = Field(default=1200, ge=256, le=16384)
     brands_path: Path = ROOT / "content-sample-assets-folder/brands.json"
     data_dir: Path = ROOT / "data"
     ffmpeg_bin: str = "ffmpeg"

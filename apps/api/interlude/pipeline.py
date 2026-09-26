@@ -31,6 +31,7 @@ def analyze_candidate(candidate: BreakCandidate, frames: list[Frame], transcript
                              rejection_reasons=list(candidate.rejection_reasons))
     if candidate.prefilter_status == "REJECTED":
         return decision
+    decision.debug["playback"] = {"latest_start_sec": candidate.timestamp_sec + min(0.25, candidate.silence_after_sec / 2)}
     try:
         decision.semantics = provider.analyze(frames, transcript, vocabulary(brands), candidate.timestamp_sec)
     except ProviderError as exc:

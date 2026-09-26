@@ -34,6 +34,7 @@ def test_qwen_receives_frames_and_timestamps(tmp_path):
     frame.write_bytes(b"sample-jpeg")
     def respond(request):
         body = json.loads(request.content)
+        assert body["chat_template_kwargs"]["enable_thinking"] is False
         assert any(p["type"] == "image_url" for p in body["messages"][1]["content"])
         assert "4.000" in str(body)
         return httpx.Response(200, json={"choices": [{"message": {"content": json.dumps({

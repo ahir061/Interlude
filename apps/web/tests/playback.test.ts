@@ -16,3 +16,9 @@ test('forward seek skips crossed slots and keeps later slots available', () => {
   assert.deepEqual(skippedBySeek(10, 30, breaks), ['one']);
   assert.equal(nextBreak(49.9, 50.1, breaks, new Set(['one']))?.candidate_id, 'two');
 });
+
+test('delayed playback events cannot cut into speech after a safe boundary', () => {
+  const slots = [{ candidate_id: 'safe', timestamp_sec: 60, latest_start_sec: 60.25 }];
+  assert.equal(nextBreak(59.9, 61.1, slots, new Set()), undefined);
+  assert.equal(nextBreak(59.9, 60.2, slots, new Set())?.candidate_id, 'safe');
+});

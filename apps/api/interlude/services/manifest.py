@@ -14,6 +14,7 @@ class ManifestService:
             "semantic_candidates_attempted": sum(c.prefilter_status == "SURVIVED" for c in result.candidates),
             "accepted_break_count": len(accepted)}, ad_breaks=[
                 AdBreak(candidate_id=d.candidate_id, timestamp_sec=d.timestamp_sec, brand_id=d.selected_brand_id,
+                        latest_start_sec=d.debug.get("playback", {}).get("latest_start_sec", d.timestamp_sec),
                         creative_id=d.selected_creative_id, creative_url=d.creative_url,
                         duration_sec=d.creative_duration_sec, where=d.debug.get("where", {}),
                         whether=d.debug.get("whether", {}), what={"score": d.brand_match_score,

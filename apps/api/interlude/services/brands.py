@@ -15,6 +15,32 @@ def contains(text: str, concept: str) -> bool:
     return bool(normalize(concept)) and f" {normalize(concept)} " in f" {normalize(text)} "
 
 
+# Semantic aliases, never brand-specific rules. New catalog labels still use generic phrase/plural matching.
+SENSITIVE_ALIASES = {
+    "grief": ("mourning", "bereavement", "bereaved", "grieving"),
+    "funeral": ("burial", "cremation", "last rites"),
+    "violence": ("violent", "assault", "fighting", "murder", "stabbing", "shooting"),
+    "illness": ("sick", "disease", "unwell"),
+    "hospital": ("hospitalized", "hospitalised", "medical ward"),
+    "accident": ("crash", "collision"),
+    "injury": ("injured", "wounded", "bleeding"),
+    "financial distress": ("bankruptcy", "bankrupt", "debt crisis"),
+}
+
+
+def negative_match(text: str, concept: str) -> bool:
+    label = normalize(concept)
+    aliases = (label, *SENSITIVE_ALIASES.get(label, ()))
+    for alias in aliases:
+        if contains(text, alias):
+            return True
+        # Plural inflection at the final word of arbitrary catalog concepts.
+        forms = (alias + "s", alias + "es", alias[:-1] + "ies" if alias.endswith("y") else alias)
+        if any(contains(text, form) for form in forms):
+            return True
+    return False
+
+
 def load_brands(path: Path) -> list[Brand]:
     raw = json.loads(path.read_text(encoding="utf-8"))
     brands = TypeAdapter(list[Brand]).validate_python(raw.get("brands") if isinstance(raw, dict) else raw)
@@ -36,10 +62,11 @@ class BrandMatchingService:
         observed = [semantics.dominant_activity, *semantics.contexts, *semantics.sensitive_contexts,
                     *semantics.mood, semantics.narrative_state_before, semantics.narrative_state_after]
         known_negative = {normalize(c) for b in brands for c in b.negative_contexts}
-        unknown_sensitive = [c for c in semantics.sensitive_contexts if normalize(c) not in known_negative]
+        unknown_sensitive = [c for c in semantics.sensitive_contexts
+                             if not any(negative_match(c, n) for n in known_negative)]
         matches = []
         for brand in brands:
-            blocked = [f"negative_context:{c}" for c in brand.negative_contexts if any(contains(o, c) for o in observed)]
+            blocked = [f"negative_context:{c}" for c in brand.negative_contexts if any(negative_match(o, c) for o in observed)]
             blocked += [f"unmapped_sensitive_context:{c}" for c in unknown_sensitive]
             overlap = [c for c in brand.target_contexts if any(contains(o, c) for o in observed)]
             activity = float(any(contains(semantics.dominant_activity, c) for c in brand.target_contexts))

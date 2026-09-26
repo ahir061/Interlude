@@ -1,9 +1,10 @@
-export type TimedBreak = { candidate_id: string; timestamp_sec: number };
+export type TimedBreak = { candidate_id: string; timestamp_sec: number; latest_start_sec?: number };
 
 export function nextBreak<T extends TimedBreak>(previous: number, current: number, breaks: T[], played: Set<string>): T | undefined {
   if (current < previous) return undefined;
   return [...breaks].sort((a, b) => a.timestamp_sec - b.timestamp_sec).find(
     b => !played.has(b.candidate_id) && previous < b.timestamp_sec && current >= b.timestamp_sec
+      && current <= (b.latest_start_sec ?? b.timestamp_sec + 0.25)
   );
 }
 
