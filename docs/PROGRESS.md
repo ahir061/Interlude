@@ -13,3 +13,7 @@ Plan: `docs/superpowers/plans/2026-09-26-phase1.md`.
 - User authorized continuous GitHub pushes; milestones pushed to feat/phase1 using ahir061.
 - First actual smoke (Bhojon Bilashi, source 240–360s): 37 scenes, 36 candidates, 36 rejected before Qwen for dialogue separation; zero accepted. Valid no-ad outcome, does not yet prove semantic/player insertion path.
 - Task 5 in progress: Next.js production build and 3 playback state tests pass. Awaiting real accepted manifest for browser integration.
+- Task 5 complete: final actual manifest browser test passed; exact captured resume position 58.880196s, real 6-second ad ended, no replay. Four player unit tests pass after delayed-event regression.
+- Task 6 complete: final real job 586b9183-1b49-4f42-b207-02032be4a5f7: 20 scenes, 19 candidates, 18 prefilter rejections, one validated Qwen candidate, one Brand D ad at 58.84s. See docs/VERIFICATION.md for limitations and earlier failed semantic run.
+- Independent review: two important findings fixed with regressions; additional medical-emergency normalization fixed after live audit. All 39 Python tests and lint pass, production frontend build passes.
+- Deployment unchanged. Optional Docker remains unexecuted; VMAP deferred. Credentials and all videos excluded from Git.
