@@ -59,7 +59,7 @@ def evaluate_video(client, source, settings, timeout_sec):
         if previous != job["status"]:
             print(json.dumps({"event": "evaluation_stage", "job_id": job_id, "stage": job["status"]}), flush=True)
             previous = job["status"]
-        if job["status"] in ("COMPLETED", "FAILED"):
+        if job["status"] in ("COMPLETED", "FAILED", "CANCELLED"):
             break
         time.sleep(2)
     record = {"source": str(source), "job_id": job_id, "video_id": video_id, "status": job["status"],
@@ -82,7 +82,7 @@ def write_report(report, directory):
     temp = target.with_suffix(".tmp")
     temp.write_text(json.dumps(report, indent=2, ensure_ascii=False))
     temp.replace(target)
-    lines = ["# Actual Phase 2 evaluation", "", "Policy audits only; no human ground-truth accuracy is claimed.", "",
+    lines = ["# Actual video evaluation", "", "Policy audits only; no human ground-truth accuracy is claimed.", "",
         "| Video | Status | Seconds | Shots | Scenes | Candidates | Qwen calls | Cache hits | Ads | Runtime | Dialogue violations | Negative violations |",
         "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for row in report["runs"]:
@@ -98,6 +98,7 @@ def main():
     parser.add_argument("videos", nargs="+", type=Path)
     parser.add_argument("--api", default="http://localhost:8000")
     parser.add_argument("--clip-duration", type=float, default=120)
+    parser.add_argument("--full-episode", action="store_true", help="Analyze the complete source without excerpting")
     parser.add_argument("--clip-start", type=float, default=0)
     parser.add_argument("--timeout", type=float, default=3600)
     parser.add_argument("--report-dir", type=Path)
@@ -110,10 +111,14 @@ def main():
         report = json.loads((directory/"evaluation.json").read_text())
     failed = False
     with httpx.Client(base_url=args.api, timeout=30) as client:
+        password = settings.workspace_password.get_secret_value()
+        if password:
+            client.post("/api/session", json={"password": password}).raise_for_status()
+        client.headers["X-Interlude-Request"] = "1"
         for source in args.videos:
             temporary = None
             try:
-                if MediaProbeService(settings).probe(source).duration_sec > args.clip_duration:
+                if not args.full_episode and MediaProbeService(settings).probe(source).duration_sec > args.clip_duration:
                     temporary = settings.data_dir/"work"/f"evaluation-{uuid4()}.mp4"
                     run_media([settings.ffmpeg_bin, "-v", "error", "-y", "-ss", str(args.clip_start), "-i", str(source),
                         "-t", str(args.clip_duration), "-vf", "scale=960:-2", "-c:v", "libx264", "-preset", "veryfast",
