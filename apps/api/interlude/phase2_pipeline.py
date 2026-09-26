@@ -1,13 +1,14 @@
 import json
 import logging
 import shutil
+from functools import partial
 import time
 from contextlib import contextmanager
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from interlude.config import Settings
-from interlude.domain import AnalysisResult, BreakDecision, JobStatus, Phase2Semantics
+from interlude.domain import AnalysisResult, BreakDecision, JobStatus
 from interlude.providers.asr import GroqWhisperProvider
 from interlude.providers.base import ProviderError
 from interlude.providers.perception import PerceptionClient, PROMPT_VERSION, digest, file_digest
@@ -17,12 +18,13 @@ from interlude.services.candidates import CandidateService
 from interlude.services.context import ContextMemory
 from interlude.services.creatives import CreativeService
 from interlude.services.media import (MediaError, MediaProbeService, SceneDetectionService,
-                                      extract_window, run_media)
+                                      run_media)
 from interlude.services.optimizer import GlobalBreakOptimizer, PlacementOption
 from interlude.services.policy import WhereService
 from interlude.services.scene_builder import DialogueSafetyGate, SemanticSceneBuilder
 from interlude.services.speech import VadService
 from interlude.services.episode_audio import EpisodeAudioService
+from interlude.services.semantic_windows import ordered_windows, perceive_window
 
 PIPELINE_VERSION = "3.0.0"
 POLICY_VERSION = "ranked-safety-2.2"
@@ -103,33 +105,24 @@ class Phase2Pipeline:
                 events.add(round(t, 3))
                 t += s.context_sample_interval_sec
             progress(JobStatus.SEMANTIC_ANALYSIS)
-            for index, timestamp in enumerate(sorted(events)):
+            analyze_window = partial(perceive_window,s,source,metadata.duration_sec,work,perception,
+                                     transcript,vocabulary(brands),video_hash,catalogue_hash,boundaries)
+            for index, timestamp, observation in ordered_windows(sorted(events),s.semantic_concurrency,analyze_window):
                 progress(JobStatus.SEMANTIC_ANALYSIS)
                 report_progress("semantic_windows",index,len(events))
                 # Keep frame disk use bounded independently of episode length.
                 if index:
                     shutil.rmtree(work/f"window_{index-1}", ignore_errors=True)
                 candidate = survivors.get(timestamp)
-                nearby = transcript.around(timestamp-5, timestamp+5)
-                frames = []
-                semantic = None
-                try:
-                    with measure(timings, "qwen_semantic_analysis"):
-                        frames = extract_window(s, source, timestamp, metadata.duration_sec, work/f"window_{index}")
-                        semantic = perception.perceive(frames, nearby, vocabulary(brands), timestamp,
-                            video_hash, catalogue_hash, "boundary" if timestamp in boundaries else "context_monitor")
-                        if not isinstance(semantic, Phase2Semantics):
-                            raise ProviderError("semantic_invalid_contract")
-                    memory.observe(timestamp, semantic)
-                    observations.append({"timestamp_sec": timestamp, "purpose": "boundary" if timestamp in boundaries else "context_monitor",
-                                         "semantics": semantic.model_dump(), "error_code": None})
-                except (ProviderError, MediaError) as exc:
-                    memory.observe(timestamp, None)
-                    code = exc.code if isinstance(exc, ProviderError) else "semantic_frame_window_failed"
-                    observations.append({"timestamp_sec": timestamp, "semantics": None, "error_code": code})
-                    if candidate:
-                        decision_map[candidate.id].rejection_reasons.extend(["model_failure", code])
-                        decision_map[candidate.id].debug["hard_block_reason"].append("scene_context_unresolved")
+                frames, nearby, semantic, code, elapsed = observation
+                timings["qwen_semantic_analysis"] = timings.get("qwen_semantic_analysis",0)+elapsed
+                memory.observe(timestamp,semantic)
+                observations.append({"timestamp_sec":timestamp,
+                    "purpose":"boundary" if timestamp in boundaries else "context_monitor",
+                    "semantics":semantic.model_dump() if semantic else None,"error_code":code})
+                if semantic is None and candidate:
+                    decision_map[candidate.id].rejection_reasons.extend(["model_failure",code])
+                    decision_map[candidate.id].debug["hard_block_reason"].append("scene_context_unresolved")
                 if semantic is not None and timestamp in boundaries:
                     semantics_by_time[timestamp] = semantic
                 if index % 10 == 0:
@@ -245,4 +238,5 @@ class Phase2Pipeline:
             candidates=candidates, decisions=decisions, run_metadata={"pipeline_version": PIPELINE_VERSION,
                 "policy_version": POLICY_VERSION, "prompt_version": PROMPT_VERSION, "catalogue_hash": catalogue_hash,
                 "video_hash": video_hash, "processing_timings_sec": timings, "optimizer": optimization,
+                "semantic_concurrency": s.semantic_concurrency, "semantic_timing_note": "summed window durations; may exceed wall time",
                 "audio_analysis": audio_metadata, "semantic_observations": observations, "provider_requests": perception.events, **perception.metrics})

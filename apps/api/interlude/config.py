@@ -83,6 +83,7 @@ class Settings(BaseSettings):
     brand_secondary_weight: float = Field(default=0.05, ge=0)
     safety_min_confidence: float = Field(default=0.9, ge=0, le=1)
     optimizer_beam_width: int = Field(default=2048, ge=1, le=100000)
+    semantic_concurrency: int = Field(default=3, ge=1, le=8)
     semantic_cache_enabled: bool = True
     reports_dir: Path = ROOT / "reports"
     upload_retention_hours: float = Field(default=72, ge=1)

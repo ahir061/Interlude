@@ -134,3 +134,18 @@ def test_semantic_failure_cannot_create_contextually_targeted_ad(media):
     assert not decision.accepted
     assert decision.debug["hard_blocked"]
     assert "scene_context_unresolved" in decision.debug["hard_block_reason"]
+
+
+def test_speech_blocked_boundary_still_contributes_semantic_scene(media):
+    from interlude.domain import TranscriptSegment, Word
+    class CrossingAsr:
+        def transcribe(self,audio):
+            return Transcript(segments=[TranscriptSegment(start_sec=28,end_sec=32,text="voiceover",
+                words=[Word(start_sec=29,end_sec=31,text="crossing")])])
+    source,s=media
+    result=Phase2Pipeline(s,CrossingAsr(),Perception()).run("test",source,lambda _:None)
+    assert len(result.scenes)==2
+    assert not result.decisions[0].accepted
+    assert result.decisions[0].debug["hard_blocked"]
+    assert result.decisions[0].where_score==0
+    assert any(o['timestamp_sec']==30 and o['purpose']=='boundary' for o in result.run_metadata['semantic_observations'])

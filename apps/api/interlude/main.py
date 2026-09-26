@@ -9,7 +9,8 @@ import time
 from fastapi import FastAPI, File, HTTPException, UploadFile, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
-from sqlalchemy import select, text
+from sqlalchemy import select, text, func, and_
+from sqlalchemy.orm import aliased
 
 from interlude.config import Settings, get_settings
 from interlude.db import (ArtifactRow, CandidateRow, DecisionRow, JobRow, ObservationRow, SceneRow, ShotRow, TranscriptRow,
@@ -58,14 +59,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/api/videos")
     def library(limit:int=Query(30,ge=1,le=100),offset:int=Query(0,ge=0)):
         with session_factory() as session:
-            videos=session.scalars(select(VideoRow).order_by(VideoRow.created_at.desc()).offset(offset).limit(limit)).all()
-            result=[]
-            for video in videos:
-                latest=session.scalars(select(JobRow).where(JobRow.video_id==video.id)
-                    .order_by(JobRow.created_at.desc(),JobRow.id.desc()).limit(1)).first()
-                result.append({"id":video.id,"metadata":video.metadata_json,"created_at":video.created_at.isoformat(),
-                               "media_available":Path(video.path).is_file(),
-                               "job":repo.serialize_job(latest).model_dump() if latest else None})
+            ranked=select(JobRow,func.row_number().over(partition_by=JobRow.video_id,
+                order_by=(JobRow.created_at.desc(),JobRow.id.desc())).label("position")).subquery()
+            latest=aliased(JobRow,ranked)
+            rows=session.execute(select(VideoRow,latest).outerjoin(latest,
+                and_(latest.video_id==VideoRow.id,ranked.c.position==1))
+                .order_by(VideoRow.created_at.desc()).offset(offset).limit(limit)).all()
+            result=[{"id":video.id,"metadata":video.metadata_json,"created_at":video.created_at.isoformat(),
+                     "media_available":Path(video.path).is_file(),
+                     "job":repo.serialize_job(job).model_dump() if job else None} for video,job in rows]
             return {"items":result,"limit":limit,"offset":offset}
 
     @app.post("/api/jobs/{job_id}/cancel")
