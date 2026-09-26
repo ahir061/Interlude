@@ -40,6 +40,9 @@ class ManifestService:
         from interlude.services.placement_report import candidate_rows
         rows = candidate_rows(result)
         (output / "candidates.json").write_text(json.dumps(rows, ensure_ascii=False, indent=2))
+        artifacts["candidates"] = output / "candidates.json"
+        artifacts["scenes"] = output / "scenes.json"
+        artifacts["scenes"].write_text(json.dumps([scene.model_dump(mode="json") for scene in result.scenes],indent=2))
         if rows:
             with (output / "candidates.csv").open("w", newline="") as stream:
                 writer = csv.DictWriter(stream, fieldnames=list(rows[0]))

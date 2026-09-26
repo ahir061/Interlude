@@ -95,3 +95,17 @@ def test_cleanup_preserves_active_job_media_and_persistent_ads(database, tmp_pat
         session.get(JobRow, job.id).status = "FAILED"
     assert str(source) in cleanup_media(s, database, apply=True)["paths"]
     assert not source.exists() and ad.exists()
+
+
+def test_cancelled_worker_cannot_publish_and_retry_is_new_job(database):
+    repo=Repository(database)
+    job=repo.enqueue("video")
+    claim=repo.claim(900)
+    repo.update_progress(job.id,"speech_chunks",2,10,token=claim[3])
+    with database() as session:
+        assert repo.serialize_job(session.get(JobRow,job.id)).progress["completed"]==2
+    repo.cancel(job.id)
+    with pytest.raises(ValueError,match="ownership"):
+        repo.checkpoint(job.id,"scenes",[],token=claim[3])
+    new=repo.enqueue("video",force=True)
+    assert new.id!=job.id

@@ -240,6 +240,7 @@ class JobStatus(StrEnum):
     BRAND_MATCHING = "BRAND_MATCHING"
     COMPLETED = "COMPLETED"
     FAILED = "FAILED"
+    CANCELLED = "CANCELLED"
 
 
 class AnalysisJob(Model):
@@ -250,6 +251,7 @@ class AnalysisJob(Model):
     error_stage: str | None = None
     state: str = "QUEUED"
     processing_stage: str | None = None
+    progress: dict[str, Any] = Field(default_factory=dict)
 
 
 class AdBreak(Model):

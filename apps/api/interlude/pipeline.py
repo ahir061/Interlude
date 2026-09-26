@@ -20,7 +20,7 @@ STAGES = list(JobStatus)
 
 
 def transition_allowed(before: JobStatus, after: JobStatus) -> bool:
-    if before in (JobStatus.COMPLETED, JobStatus.FAILED):
+    if before in (JobStatus.COMPLETED, JobStatus.FAILED, JobStatus.CANCELLED):
         return False
     return before == after or after == JobStatus.FAILED or STAGES.index(after) == STAGES.index(before) + 1
 

@@ -19,7 +19,7 @@ class Repository:
             if video is None:
                 raise KeyError("video_not_found")
             existing = session.scalars(select(JobRow).where(JobRow.video_id == video_id,
-                JobRow.status.not_in(["COMPLETED", "FAILED"]))).first()
+                JobRow.status.not_in(["COMPLETED", "FAILED", "CANCELLED"]))).first()
             if existing:
                 return self.serialize_job(existing)
             if not force:
@@ -36,11 +36,11 @@ class Repository:
     def serialize_job(row):
         return AnalysisJob(id=row.id, video_id=row.video_id, status=row.status,
                            error_code=row.error_code, error_stage=row.error_stage,
-                           state=row.state or "QUEUED", processing_stage=row.status)
+                           state=row.state or "QUEUED", processing_stage=row.status, progress=row.progress_json or {})
 
     def claim(self, lease_sec: int):
         with self.sessions.begin() as session:
-            stale = session.scalars(select(JobRow).where(JobRow.status.not_in(["QUEUED", "COMPLETED", "FAILED"]),
+            stale = session.scalars(select(JobRow).where(JobRow.status.not_in(["QUEUED", "COMPLETED", "FAILED", "CANCELLED"]),
                 JobRow.updated_at < now() - timedelta(seconds=lease_sec)).with_for_update(skip_locked=True)).all()
             for row in stale:
                 row.error_stage, row.error_code, row.status = row.status, "worker_lease_expired", "FAILED"
@@ -53,6 +53,23 @@ class Repository:
             job.state, job.lease_token, job.heartbeat_at = "PROCESSING", str(uuid4()), now()
             video = session.get(VideoRow, job.video_id)
             return job.id, video.id, video.path, job.lease_token
+
+    def update_progress(self, job_id, stage, completed, total, token):
+        with self.sessions.begin() as session:
+            job = self._owned(session, job_id, token)
+            job.progress_json = {"stage": stage, "completed": completed, "total": total}
+            job.updated_at = now()
+
+    def cancel(self, job_id):
+        with self.sessions.begin() as session:
+            job = session.get(JobRow, job_id, with_for_update=True)
+            if job is None:
+                raise KeyError("job_not_found")
+            if job.status not in ("COMPLETED", "FAILED", "CANCELLED"):
+                job.status = job.state = "CANCELLED"
+                job.lease_token = None
+                job.updated_at = now()
+            return self.serialize_job(job)
 
     def _owned(self, session, job_id, token):
         job = session.get(JobRow, job_id, with_for_update=True)

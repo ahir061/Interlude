@@ -16,7 +16,7 @@ def cleanup_media(settings, session_factory, apply=False, now_sec=None):
     # Hold video rows while choosing/removing sources so enqueue cannot race deletion.
     with session_factory.begin() as session:
         videos = session.scalars(select(VideoRow).with_for_update()).all()
-        active = set(session.scalars(select(JobRow.video_id).where(JobRow.status.not_in(["COMPLETED", "FAILED"]))).all())
+        active = set(session.scalars(select(JobRow.video_id).where(JobRow.status.not_in(["COMPLETED", "FAILED", "CANCELLED"]))).all())
         for video in videos:
             path = Path(video.path)
             if video.id in active or not path.exists() or path.is_symlink():

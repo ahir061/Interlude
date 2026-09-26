@@ -37,7 +37,9 @@ def process_job(repository: Repository, pipeline: Phase2Pipeline, claimed: tuple
             repository.progress(job_id, stage, token=token)
             logger.info(json.dumps({"event": "job_stage", "job_id": job_id, "stage": stage.value}))
         result = pipeline.run(video_id, Path(path), progress,
-                              lambda kind, items: repository.checkpoint(job_id, kind, items, token=token), job_id=job_id)
+                              lambda kind, items: repository.checkpoint(job_id, kind, items, token=token), job_id=job_id,
+                              report_progress=lambda stage,done,total: repository.update_progress(
+                                  job_id,stage,done,total,token))
         repository.heartbeat(job_id, token)
         artifact_started = time.perf_counter()
         output = pipeline.settings.data_dir / "outputs" / job_id

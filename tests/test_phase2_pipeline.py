@@ -76,7 +76,7 @@ def test_semantic_continuation_is_scored_without_forcing_scene_split(media):
     result = Phase2Pipeline(s, SilentAsr(), Perception(continuity="continuing")).run("test", source, lambda _: None)
     assert result.decisions[0].where_score > 0
     assert result.decisions[0].debug["where"]["components"]["narrative_closure"] < 0.5
-    assert len(result.scenes) == 1
+    assert len(result.scenes) == 2  # location change can coexist with continuing speech
 
 
 def test_asr_failure_stops_phase2_without_decisions(media):

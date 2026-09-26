@@ -30,11 +30,9 @@ def scene_grouping_reasons(semantics: Phase2Semantics, settings: Settings) -> li
     reasons = []
     if semantics.confidence < settings.min_semantic_confidence or semantics.transition_confidence < settings.min_transition_confidence:
         reasons.append("semantic_uncertainty")
-    if semantics.dialogue_continuity not in ("completed", "no_dialogue"):
-        reasons.append("unsafe_dialogue")
     if semantics.transition_type in ("camera_angle", "montage", "none", "uncertain"):
         reasons.append("not_semantic_scene_boundary")
-    if semantics.narrative_state != "scene_concluding" or semantics.semantic_transition_score < settings.min_transition_score:
+    if semantics.semantic_transition_score < settings.min_transition_score:
         reasons.append("weak_transition")
     return reasons
 

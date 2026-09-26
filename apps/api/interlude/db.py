@@ -32,6 +32,7 @@ class JobRow(Base):
     state: Mapped[str] = mapped_column(String(16), default="QUEUED", server_default="QUEUED")
     lease_token: Mapped[str | None] = mapped_column(String(36))
     heartbeat_at: Mapped[datetime | None] = mapped_column(DateTime)
+    progress_json: Mapped[dict | None] = mapped_column(JSON)
     error_code: Mapped[str | None] = mapped_column(String(120))
     error_stage: Mapped[str | None] = mapped_column(String(32))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=now)

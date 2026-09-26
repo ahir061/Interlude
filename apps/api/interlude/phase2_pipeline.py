@@ -1,5 +1,6 @@
 import json
 import logging
+import shutil
 import time
 from contextlib import contextmanager
 from pathlib import Path
@@ -16,13 +17,14 @@ from interlude.services.candidates import CandidateService
 from interlude.services.context import ContextMemory
 from interlude.services.creatives import CreativeService
 from interlude.services.media import (MediaError, MediaProbeService, SceneDetectionService,
-                                      extract_audio, extract_window, run_media)
+                                      extract_window, run_media)
 from interlude.services.optimizer import GlobalBreakOptimizer, PlacementOption
 from interlude.services.policy import WhereService
 from interlude.services.scene_builder import DialogueSafetyGate, SemanticSceneBuilder
 from interlude.services.speech import VadService
+from interlude.services.episode_audio import EpisodeAudioService
 
-PIPELINE_VERSION = "2.0.0"
+PIPELINE_VERSION = "3.0.0"
 POLICY_VERSION = "ranked-safety-2.2"
 logger = logging.getLogger("interlude.pipeline")
 
@@ -42,7 +44,7 @@ class Phase2Pipeline:
         self.asr = asr or GroqWhisperProvider(settings)
         self.perception_override = perception
 
-    def run(self, video_id, source: Path, progress, checkpoint=lambda kind, items: None, job_id=None):
+    def run(self, video_id, source: Path, progress, checkpoint=lambda kind, items: None, job_id=None, report_progress=lambda stage,done,total: None):
         s = self.settings
         started = time.perf_counter()
         timings = {}
@@ -73,16 +75,11 @@ class Phase2Pipeline:
                     shot.id = f"shot_{i+1:04d}"
                 checkpoint("shots", shots)
             progress(JobStatus.TRANSCRIBING)
-            audio = work/"speech.wav"
-            with measure(timings, "audio_extraction"):
-                extract_audio(s, source, audio)
-            with measure(timings, "asr"):
-                transcript = self.asr.transcribe(audio)
-                if any(t.end_sec > metadata.duration_sec+0.5 for t in [*transcript.segments, *transcript.speech_words]):
-                    raise ProviderError("asr_timestamp_outside_video")
+            with measure(timings, "speech_analysis"):
+                transcript, vad, audio_metadata = EpisodeAudioService(s, self.asr, VadService()).analyze(
+                    source, metadata.duration_sec, work, video_hash,
+                    lambda done,total: report_progress("speech_chunks",done,total))
                 checkpoint("transcript", transcript.segments)
-            with measure(timings, "vad"):
-                vad = VadService().detect(audio)
             progress(JobStatus.CANDIDATE_GENERATION)
             with measure(timings, "candidate_filtering"):
                 candidates = CandidateService(s).generate(shots, transcript, vad, metadata.duration_sec)
@@ -99,7 +96,8 @@ class Phase2Pipeline:
             survivors = {c.timestamp_sec: c for c in candidates if c.prefilter_status == "SURVIVED"}
             decision_map = {d.candidate_id: d for d in decisions}
             # Monitoring includes regions with unsafe/no cuts: sensitive memory cannot depend on ad candidacy.
-            events = set(survivors)
+            boundaries = {c.timestamp_sec for c in candidates}
+            events = set(boundaries)
             t = min(5.0, metadata.duration_sec/2)
             while t < metadata.duration_sec:
                 events.add(round(t, 3))
@@ -107,6 +105,10 @@ class Phase2Pipeline:
             progress(JobStatus.SEMANTIC_ANALYSIS)
             for index, timestamp in enumerate(sorted(events)):
                 progress(JobStatus.SEMANTIC_ANALYSIS)
+                report_progress("semantic_windows",index,len(events))
+                # Keep frame disk use bounded independently of episode length.
+                if index:
+                    shutil.rmtree(work/f"window_{index-1}", ignore_errors=True)
                 candidate = survivors.get(timestamp)
                 nearby = transcript.around(timestamp-5, timestamp+5)
                 frames = []
@@ -115,11 +117,11 @@ class Phase2Pipeline:
                     with measure(timings, "qwen_semantic_analysis"):
                         frames = extract_window(s, source, timestamp, metadata.duration_sec, work/f"window_{index}")
                         semantic = perception.perceive(frames, nearby, vocabulary(brands), timestamp,
-                            video_hash, catalogue_hash, "boundary" if candidate else "context_monitor")
+                            video_hash, catalogue_hash, "boundary" if timestamp in boundaries else "context_monitor")
                         if not isinstance(semantic, Phase2Semantics):
                             raise ProviderError("semantic_invalid_contract")
                     memory.observe(timestamp, semantic)
-                    observations.append({"timestamp_sec": timestamp, "purpose": "boundary" if candidate else "context_monitor",
+                    observations.append({"timestamp_sec": timestamp, "purpose": "boundary" if timestamp in boundaries else "context_monitor",
                                          "semantics": semantic.model_dump(), "error_code": None})
                 except (ProviderError, MediaError) as exc:
                     memory.observe(timestamp, None)
@@ -128,7 +130,11 @@ class Phase2Pipeline:
                     if candidate:
                         decision_map[candidate.id].rejection_reasons.extend(["model_failure", code])
                         decision_map[candidate.id].debug["hard_block_reason"].append("scene_context_unresolved")
-                checkpoint("observations", observations)
+                if semantic is not None and timestamp in boundaries:
+                    semantics_by_time[timestamp] = semantic
+                if index % 10 == 0:
+                    checkpoint("observations", observations)
+                    checkpoint("decisions", decisions)
                 if not candidate or semantic is None:
                     continue
                 decision = decision_map[candidate.id]
@@ -140,8 +146,6 @@ class Phase2Pipeline:
                 snapshot = memory.snapshot(timestamp, semantic)
                 decision.debug["context_memory"] = snapshot.model_dump()
                 decision.rejection_reasons = list(dict.fromkeys(gate["reasons"]))
-                if not decision.rejection_reasons:
-                    semantics_by_time[timestamp] = semantic
                 if decision.rejection_reasons:
                     continue
                 with measure(timings, "where_scoring"):
@@ -186,7 +190,9 @@ class Phase2Pipeline:
                     decision.rejection_reasons.append("no_safe_brand")
                     decision.debug["hard_block_reason"].append(
                         "all_brands_hard_blocked" if not any(r.eligible for r in ranked) else "brand_safety_unresolved")
-                checkpoint("decisions", decisions)
+            checkpoint("observations", observations)
+            checkpoint("decisions", decisions)
+            report_progress("semantic_windows",len(events),len(events))
             with measure(timings, "semantic_scene_grouping"):
                 scenes = SemanticSceneBuilder(s).group(shots, semantics_by_time)
                 for candidate in candidates:
@@ -239,4 +245,4 @@ class Phase2Pipeline:
             candidates=candidates, decisions=decisions, run_metadata={"pipeline_version": PIPELINE_VERSION,
                 "policy_version": POLICY_VERSION, "prompt_version": PROMPT_VERSION, "catalogue_hash": catalogue_hash,
                 "video_hash": video_hash, "processing_timings_sec": timings, "optimizer": optimization,
-                "semantic_observations": observations, "provider_requests": perception.events, **perception.metrics})
+                "audio_analysis": audio_metadata, "semantic_observations": observations, "provider_requests": perception.events, **perception.metrics})

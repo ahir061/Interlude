@@ -11,6 +11,11 @@ ROOT = Path(__file__).resolve().parents[3]
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=ROOT / ".env", extra="ignore", case_sensitive=False, hide_input_in_errors=True)
+    environment: Literal["development", "production"] = "development"
+    workspace_password: SecretStr = SecretStr("")
+    session_secret: SecretStr = SecretStr("")
+    session_ttl_sec: int = Field(default=43200, ge=300, le=604800)
+    session_cookie_secure: bool = False
     llm_api_url: str = Field(default="", repr=False)
     llm_model: str = ""
     llm_api_key: SecretStr = SecretStr("")
@@ -56,8 +61,11 @@ class Settings(BaseSettings):
     where_stability_weight: float = Field(default=0.1, ge=0)
     where_confidence_weight: float = Field(default=0.05, ge=0)
     scene_threshold: float = Field(default=27, gt=0)
-    max_upload_mb: int = Field(default=250, gt=0)
-    max_video_duration_sec: float = Field(default=300, gt=0)
+    max_upload_mb: int = Field(default=4096, gt=0)
+    max_video_duration_sec: float = Field(default=7200, gt=0)
+    audio_chunk_sec: float = Field(default=300, ge=30, le=600)
+    audio_chunk_overlap_sec: float = Field(default=2, ge=1, le=10)
+    media_command_timeout_sec: int = Field(default=900, ge=30)
     cors_origins: list[str] = ["http://localhost:3000"]
     worker_lease_sec: int = Field(default=900, ge=300)
     # Deprecated silence gates, retained for configuration compatibility only.
@@ -84,6 +92,10 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_weights(self):
+        if self.workspace_password.get_secret_value() and len(self.session_secret.get_secret_value()) < 32:
+            raise ValueError("protected workspace requires a session secret of at least 32 characters")
+        if self.environment == "production" and (len(self.workspace_password.get_secret_value()) < 16 or not self.session_cookie_secure):
+            raise ValueError("production requires a strong workspace password and secure session cookies")
         if not self.asr_segment_timestamps:
             raise ValueError("ASR segment timestamps are required for dialogue safety")
         if sum(self.weights.values()) <= 0:
@@ -107,7 +119,7 @@ class Settings(BaseSettings):
                           query={"charset": "utf8mb4"})
 
     def prepare_dirs(self):
-        for name in ("uploads", "work", "ads", "outputs", "semantic_cache"):
+        for name in ("uploads", "work", "ads", "outputs", "semantic_cache", "audio_cache"):
             (self.data_dir / name).mkdir(parents=True, exist_ok=True)
 
 
