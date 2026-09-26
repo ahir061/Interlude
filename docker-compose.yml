@@ -3,11 +3,19 @@ services:
     build: .
     env_file: .env
     command: python scripts/migrate.py
+    init: true
   api:
     build: .
     env_file: .env
     ports: ["127.0.0.1:8000:8000"]
-    volumes: ["./data:/app/data"]
+    volumes: ["interlude_data:/app/data", "interlude_reports:/app/reports"]
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/ready', timeout=10)"]
+      interval: 30s
+      timeout: 15s
+      retries: 3
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -15,11 +23,30 @@ services:
     build: .
     env_file: .env
     command: python -m interlude.worker
-    volumes: ["./data:/app/data"]
+    volumes: ["interlude_data:/app/data", "interlude_reports:/app/reports"]
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 10m
+    healthcheck:
+      test: ["CMD", "python", "-c", "import time; from pathlib import Path; assert time.time()-float(Path('/app/data/worker-heartbeat').read_text()) < 90"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
     depends_on:
       migrate:
         condition: service_completed_successfully
   web:
     build: ./apps/web
     ports: ["127.0.0.1:3000:3000"]
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+volumes:
+  interlude_data:
+  interlude_reports:
 # MySQL and Qwen remain your existing external services; no new database server.

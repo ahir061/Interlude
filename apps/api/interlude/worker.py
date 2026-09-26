@@ -24,6 +24,7 @@ def process_job(repository: Repository, pipeline: Phase2Pipeline, claimed: tuple
         while not stopped.wait(pipeline.settings.worker_heartbeat_sec):
             try:
                 repository.heartbeat(job_id, token)
+                (pipeline.settings.data_dir / "worker-heartbeat").write_text(str(time.time()))
             except Exception:
                 lost.set()
                 return
