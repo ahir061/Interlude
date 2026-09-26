@@ -1,143 +1,146 @@
 # Interlude — Episode Studio
 
-Phase 3 supports complete Bengali episodes, semantic scene review, ranked safe placements and a protected team workspace. Start with the [Phase 3 deployment and operations guide](docs/PHASE3.md). The current branch is `feat/phase3`; earlier phase evidence below is historical.
+Interlude analyzes Bengali episodes and proposes contextually relevant ad breaks without cutting through speech or ignoring brand exclusions. It is a protected team workspace with a background analysis worker, an inspectable placement review, playable ad previews, and **VMAP 1.0 export with embedded VAST 3.0**. The complete workflow supports H.264 MP4 episodes with audio up to the configured limits; the default limits are **4 GiB** and **two hours**.
 
+## What the app includes
 
-Context-aware multimodal ad placement & intelligent brand matching for long-form media.
+| Capability | What it does |
+| --- | --- |
+| Full episode upload and background jobs | Streams an MP4 through the gateway, validates container, codec, audio, size and duration, and queues a persisted job. The workspace shows upload progress and processing stages. You can leave after upload, reopen an episode, cancel active analysis, or retry a failed job. |
+| Scene and speech analysis | PySceneDetect finds raw visual cuts. Groq Whisper Large V3 supplies Bengali transcript timing, Silero VAD supplies an independent speech timeline, and the worker groups cuts into semantic scenes. Five-minute overlapping audio chunks allow complete episodes to be processed within hosted ASR request limits. |
+| Safe opportunity ranking | Exact word and VAD speech crossings are hard blocked. Qwen analyzes local visual and narrative context; deterministic WHERE scoring combines visual strength, dialogue gap, semantic transition, narrative closure, shot stability and confidence. Every candidate, including rejected cuts, remains inspectable. |
+| Contextual brand selection | Brands and negative contexts come from the JSON catalogue. Negative or unresolved sensitive context blocks a brand before relevance scoring. Eligible brands are ranked against the scene's activity and target contexts, then independently checked by Qwen for a SAFE verdict. A run may correctly return **no ad break**. |
+| Episode-wide schedule | A bounded optimizer selects from ranked safe opportunities while enforcing minimum spacing, a rolling hourly break cap and maximum ad load using each creative's actual probed duration. It records why candidates lost to safety, quality or pacing. |
+| Review workspace | Inspect episode metrics, a semantic scene timeline, the final schedule, candidate scores and reasons, brand eligibility, and a centered Qwen explanation with supporting observations for each selected placement. The light interface uses Thinking Orbs for active loading states. |
+| Real playback | The player runs the source MP4, inserts an actual MP4 creative at an accepted break, and resumes content. Clicking a schedule timestamp first plays three seconds of the episode before the break, then plays the ad and resumes at that timestamp. Forward seeking skips crossed breaks; ordinary automatic breaks play once. |
+| Exports | Download **VMAP XML**, debug JSON, semantic scenes JSON and candidates JSON from the review. The analysis manifest is also available through the API. All exports come from the same final decisions, so the player and VMAP do not use separate placement policies. |
+| Protected local gateway | One shared team workspace uses a password-backed session when configured. The gateway serves the Next.js UI and same-origin API on localhost ports 3000 and 8080, streams large uploads directly to FastAPI, and keeps the web container behind it. |
 
-Phase 2 uploads a short Bengali H.264 MP4, groups raw shots conservatively, hard-blocks exact ASR-word/VAD speech crossings and scores transition quality, carries recent sensitive context, independently verifies eligible brands, and optimizes a global ad schedule. Canonical decisions produce JSON and VMAP. The plain Next.js player pauses source content, plays the selected MP4 creative and resumes at the captured position. Returning **no ad break** is valid when no safe opportunity clears the combined quality floor. See [ranked placement policy](docs/PHASE2.md).
+The supplied brands and ads are synthetic demo material. Placement decisions are derived from the uploaded episode and configured catalogue, not from sample filenames or hard-coded timestamps.
 
-## Requirements
+## Start with Docker Compose
 
-- Python 3.11–3.13 and [uv](https://docs.astral.sh/uv/)
-- Node.js 22, npm and Git
-- FFmpeg and ffprobe (`brew install ffmpeg` on macOS; `apt install ffmpeg` on Debian/Ubuntu)
-- Existing hosted MySQL and OpenAI-compatible Qwen endpoint; Groq account with Whisper Large V3
-- Organizer `brands.json` and an approximately two-minute Bengali MP4
+You need Docker with Compose, an existing MySQL database, a Groq API key, and an OpenAI-compatible hosted Qwen endpoint. The repository does not start another database or a local Qwen server.
 
-PySceneDetect, CPU PyTorch and packaged Silero VAD weights are installed through `uv sync`. Qwen runs only on the existing external service. No PostgreSQL, Redis, RAG, vector database or additional model server is used.
+```bash
+cp .env.example .env  # Only for a new setup; never overwrite your existing .env.
+```
 
-## Setup
+Fill in the database, Groq and Qwen values in `.env`. For a protected workspace, set `WORKSPACE_PASSWORD` and a random `SESSION_SECRET`; production requires a password of at least 16 characters, a secret of at least 32 characters, HTTPS and secure cookies. Keep `.env` out of Git.
+
+```bash
+docker compose up -d --build
+# If your Docker installation has the standalone command, use: docker-compose up -d --build
+```
+
+Open **http://localhost:3000** or **http://localhost:8080**. Both ports go through the same gateway. The migration runs before the API and worker start. Compose retains media and reports in named volumes; routine shutdown is `docker compose down` without `-v`.
+
+To update only the frontend after a UI change:
+
+```bash
+docker compose up -d --build --no-deps web
+```
+
+The API and worker use the external services configured in `.env`. Do not run a host worker and a container worker against the same database unless they share the same media paths.
+
+## Use the workspace
+
+1. Sign in if the workspace is protected. Choose an H.264 MP4 with audio and click **Analyze episode**. Keep the tab open until the upload finishes; analysis continues in the worker afterward.
+2. Watch the job stages or return through **Recent episodes**. Jobs and progress are persisted. A failed or cancelled analysis exposes a retry path; unavailable source media is marked in the library.
+3. Open a completed episode. The review shows duration, semantic scene count, candidate count, selected placements and ad load. Click the timeline to inspect a scene.
+4. Review the final schedule and play the episode. A schedule click starts three seconds before its break so you can hear and see the lead-in, then plays the selected creative and resumes content.
+5. Filter candidates to **All candidates**, **Selected** or **Safety blocked**. Inspect WHERE components, rejection reasons, brand eligibility and the grounded Qwen explanation for a selected brand.
+6. Download the exports you need. A completed analysis can also be reopened with `?video=<video_id>`.
+
+### Exports and artifacts
+
+| Output | Where | Contents |
+| --- | --- | --- |
+| VMAP XML | **VMAP** button or `GET /api/videos/{video_id}/vmap` | VMAP 1.0 break offsets with embedded VAST 3.0 linear ads, creative media URLs and actual creative durations. Only accepted breaks appear. |
+| Analysis JSON | `GET /api/videos/{video_id}/analysis` | Canonical episode manifest, summary and selected `ad_breaks` consumed by the player. |
+| Debug JSON | **Debug JSON** button or `GET /api/videos/{video_id}/debug` | Scene, candidate, score, brand-safety, schedule and processing evidence. Partial debug data is available for unfinished or failed jobs. |
+| Scenes JSON | **Scenes** button or `GET /api/videos/{video_id}/scenes` | Semantic scene boundaries, shot membership and grouping reasons. |
+| Candidates JSON | **Candidates** button or `GET /api/videos/{video_id}/candidates` | Candidate timestamps, hard blocks, score components, ranks and final decisions. |
+| Candidates CSV and inspection clips | Generated under `data/outputs/<job_id>/` and report directories | A spreadsheet-friendly candidate export and short review clips for selected or diagnostically useful cuts. These are local artifacts, separate from the workspace download buttons. |
+
+VMAP is the ad schedule format used here. It is generated from the same accepted decisions as analysis JSON, but external ad-server certification has not been claimed.
+
+## Configuration
+
+The checked-in [.env.example](.env.example) lists every supported setting and its default. The main groups are:
+
+| Variables | Purpose |
+| --- | --- |
+| `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` | Existing MySQL connection. |
+| `GROQ_API_KEY`, `ASR_*` | Groq Whisper Large V3 transcription, Bengali hint, timing, retries and timeouts. |
+| `LLM_API_URL`, `LLM_MODEL`, `LLM_API_KEY`, `LLM_*` | Hosted OpenAI-compatible Qwen perception and safety checks. |
+| `BRANDS_PATH`, `DATA_DIR`, `REPORTS_DIR`, `MEDIA_BASE_URL` | Catalogue, media, reports and exported creative URL base. |
+| `MAX_UPLOAD_MB`, `MAX_VIDEO_DURATION_SEC` | Default 4096 MiB and 7200 seconds. If you raise the upload cap, also update the gateway's `client_max_body_size` in `deploy/nginx.conf`. |
+| `MAX_BREAKS_PER_HOUR`, `MIN_BREAK_GAP_SEC`, `MAX_AD_LOAD_PERCENT` | Rolling pacing limits; defaults are 12 breaks per hour, 30 seconds apart and 10% ad load. |
+| `MIN_WHERE_SCORE`, `WHERE_*`, `SAFETY_MIN_CONFIDENCE`, `SEMANTIC_*` | Quality weights, model confidence, independent safety floor and bounded semantic concurrency. |
+| `WORKSPACE_PASSWORD`, `SESSION_SECRET`, `SESSION_COOKIE_SECURE`, `ENVIRONMENT` | Shared workspace session and deployment security. |
+| `UPLOAD_RETENTION_HOURS`, `WORK_RETENTION_HOURS` | Retention controls for source and scratch data. |
+
+The catalogue defaults to `content-sample-assets-folder/brands.json`. It accepts an array or `{ "brands": [...] }`; brand IDs are data, not policy branches. A missing local creative is replaced by a labeled synthetic MP4 demo creative, and its probed duration is used for pacing. Adding a validated brand does not require code changes; restart and reanalyze to use a changed catalogue.
+
+## Run from source
+
+Use Python 3.11–3.13, [uv](https://docs.astral.sh/uv/), Node.js 22 with npm, FFmpeg and ffprobe. Supply the same external MySQL, Groq and Qwen credentials in `.env`.
 
 ```bash
 uv sync --python 3.11
-cd apps/web
-npm ci
-cd ../..
-cp .env.example .env  # Only for a new setup: do not overwrite an existing .env.
-```
-
-Populate `.env` locally. It is ignored by Git and Docker. The existing environment names are reused:
-
-| Names | Purpose |
-| --- | --- |
-| `LLM_API_URL`, `LLM_MODEL`, `LLM_API_KEY` | Existing external semantic provider. URL ends in `/v1` or `/chat/completions`. |
-| `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` | Existing hosted MySQL database. |
-| `GROQ_API_KEY` | Groq authentication. |
-| `ASR_MODEL`, `ASR_LANGUAGE`, `ASR_RESPONSE_FORMAT`, `ASR_TEMPERATURE` | Enforced `whisper-large-v3`, `bn`, `verbose_json`, `0`. |
-| `ASR_WORD_TIMESTAMPS`, `ASR_SEGMENT_TIMESTAMPS` | Word timestamps optional; segment timestamps mandatory. |
-| `ASR_REQUEST_TIMEOUT_SEC`, `ASR_MAX_RETRIES` | Default 180 seconds and 3 retries after initial attempt. |
-| `LLM_REQUEST_TIMEOUT_SEC`, `LLM_MAX_RETRIES` | Default 120 seconds and 3 retries. |
-| `LLM_JSON_MODE`, `LLM_ENABLE_THINKING`, `LLM_MAX_TOKENS` | Structured JSON, default non-thinking perception, bounded 1200-token completion. |
-| `BRANDS_PATH`, `DATA_DIR` | Catalog and local media root. |
-| `FFMPEG_BIN`, `FFPROBE_BIN` | Executable paths; default names on PATH. |
-| `MAX_BREAKS_PER_HOUR`, `MIN_BREAK_GAP_SEC`, `MAX_AD_LOAD_PERCENT` | Defaults 12, 30 seconds, 10% ad seconds/source seconds. |
-| `MIN_DIALOGUE_GAP_SEC`, `MIN_SCENE_SEC`, `MIN_EDGE_GAP_SEC` | Defaults 0.5 seconds each side of speech, 2 seconds scene duration, 10 seconds from content ends. |
-| `MIN_WHERE_SCORE`, `MIN_SEMANTIC_CONFIDENCE`, `MIN_BRAND_SCORE` | Defaults 0.65, 0.7, 0.15. |
-| `WHERE_BOUNDARY_WEIGHT`, `WHERE_DIALOGUE_WEIGHT`, `WHERE_SILENCE_WEIGHT`, `WHERE_SEMANTIC_WEIGHT` | Defaults 0.2, 0.25, 0.2, 0.35; normalized before scoring. |
-| `SCENE_THRESHOLD` | PySceneDetect content threshold, default 27. |
-| `MAX_UPLOAD_MB`, `MAX_VIDEO_DURATION_SEC` | Phase 1 limits: 250 MB and 300 seconds. Start with 120 seconds. |
-| `CORS_ORIGINS` | JSON array, default `["http://localhost:3000"]`. |
-| `WORKER_LEASE_SEC` | Inactive in-progress job expiry, default 900 seconds. |
-| `NEXT_PUBLIC_API_BASE` | Browser-accessible API URL; default `http://localhost:8000`. Set in the web process/build environment. |
-
-Default catalog: `content-sample-assets-folder/brands.json`. It supports an array or `{ "brands": [...] }`. Creative `id` is normalized to `creative_id`; referenced local missing MP4s become 6-second synthetic fallback ads under `data/ads/<brand_id>/`. Actual creative duration is probed before pacing. Add another brand to the catalog and restart/reanalyze; no code change is required.
-
-## Migrate and run
-
-```bash
+cd apps/web && npm ci && cd ../..
 uv run python scripts/migrate.py
-uv run python scripts/generate_ads.py
 ```
 
-Start three terminals from the repository:
+Run these in separate terminals from the repository root:
 
 ```bash
-# Terminal 1
 uv run uvicorn interlude.main:app --host 127.0.0.1 --port 8000
-
-# Terminal 2
 uv run python -m interlude.worker
-
-# Terminal 3
 cd apps/web && npm run dev
 ```
 
-Open **http://localhost:3000**. Choose a short MP4 and click **Analyze**. Upload validates and probes the media, then creates a persisted QUEUED job. The worker performs analysis. The page polls status, shows all decisions and JSON, and loads the playable result. `?video=<id>` reopens a completed analysis. In production mode use `npm run build` followed by `npm run start`.
+Open `http://localhost:3000`. Stop the Compose gateway first if it already holds port 3000. The Next.js development server proxies `/api` to `http://127.0.0.1:8000`; the Compose gateway is the supported path for large streamed uploads. Build the frontend with `npm --prefix apps/web run build` for a production frontend image.
 
-Docker: `docker compose up --build` uses the same external database and providers. Migration runs first; API, worker and web run as non-root users with healthchecks. Named volumes retain container media and reports separately from host development data. Stop with `docker compose down` (without `-v`). Do not run host and container workers together against the same database unless they share identical media paths. See [Phase 2 verification](docs/PHASE2-VERIFICATION.md) for measured results.
+## API and operations
 
-## Sample flow
+| Endpoint | Purpose |
+| --- | --- |
+| `POST /api/session`, `POST /api/session/logout` | Sign in or out of the shared workspace. |
+| `POST /api/videos`, `GET /api/videos` | Upload an episode and list episodes with their latest jobs. |
+| `POST /api/videos/{video_id}/analyze?force=true` | Queue a new analysis when a fresh run is required; active duplicate requests reuse the current job. |
+| `GET /api/jobs/{job_id}`, `POST /api/jobs/{job_id}/cancel` | Read progress or cancel an active job. |
+| `GET /api/videos/{video_id}/media`, `GET /api/ads/{brand_id}/{creative_id}` | Serve source and creative MP4s for playback. |
+| `POST /api/videos/{video_id}/candidates/{candidate_id}/explanation` | Explain an accepted brand selection with Qwen and return recorded evidence. |
+| `GET /api/brands` | Return the validated catalogue. |
+| `GET /health`, `GET /ready` | Process liveness and dependency/configuration readiness. |
 
-The supplied assets contain full episodes. Extract a short excerpt without altering the original:
+The export endpoints are listed above. `/ready` checks configuration, schema, storage and local media tools; it does not prove that external inference requests will succeed. Jobs use leases and heartbeats, and a cancelled or stale worker cannot publish a completed manifest. Validated inference caches allow retries to reuse completed work. The retention command previews deletions by default; `--apply` is required to remove eligible expired media:
 
 ```bash
-mkdir -p data/samples
-ffmpeg -ss 120 -i content-sample-assets-folder/indubala_bhaater_hotel.mp4 \
-  -t 120 -c:v libx264 -preset veryfast -crf 25 -vf scale=960:-2 \
-  -c:a aac -movflags +faststart data/samples/indubala_120s.mp4
-uv run python scripts/smoke.py data/samples/indubala_120s.mp4
+uv run python -m interlude.cleanup
+uv run python -m interlude.cleanup --apply
 ```
 
-The smoke script performs a real multipart upload, waits for the persisted job, and reports actual counts. It uses real Groq, CPU VAD and the configured semantic endpoint; it never substitutes transcripts or semantic outputs. Artifacts are under `data/outputs/<job_id>/analysis.json` and `debug.json`, with smoke evidence alongside them. A completed job may have no ads, including when all semantic candidates fail validation.
-
-## API
-
-| Method/path | Behavior |
-| --- | --- |
-| `POST /api/videos` | Multipart field `file`; returns video and queued job (202). |
-| `POST /api/videos/{video_id}/analyze` | Reuse active/completed analysis; `?force=true` explicitly queues a fresh completed-video analysis. |
-| `GET /api/jobs/{job_id}` | Current state and safe error code/stage. |
-| `GET /api/videos/{video_id}/analysis` | Latest job's canonical analysis manifest. |
-| `GET /api/videos/{video_id}/vmap` | VMAP XML from the same final decisions. |
-| `GET /api/videos/{video_id}/debug` | Completed debug or partial failure/progress data. |
-| `GET /api/videos/{video_id}/media` | Source MP4 with byte-range support. |
-| `GET /api/ads/{brand_id}/{creative_id}` | Generated/provided local creative. |
-| `GET /api/brands` | Validated catalog. |
-| `GET /health` | Process liveness. |
-| `GET /ready` | Database/migration, media-tool, catalog and provider-configuration checks. |
-
-Readiness does not claim provider network availability or worker liveness. These are proved by actual jobs. Never expose this unauthenticated local demo directly to the public internet.
-
-## Tests and verification
+## Verification
 
 ```bash
 uv run pytest -q
 uv run ruff check apps/api tests scripts
-cd apps/web
-npm test
-npm run build
-npx playwright install chromium
-# With API + worker + built web running, after a real job accepted a break:
-INTERLUDE_MANIFEST=/absolute/path/to/data/outputs/JOB_ID/analysis.json npm run test:browser
+npm --prefix apps/web test
+npm --prefix apps/web run typecheck
+npm --prefix apps/web run build
 ```
 
-Provider tests inject HTTP failures for retry/validation cases; policy tests inject explicit semantic fixtures. Live evaluation uses the configured services. Real media tests create MP4s with FFmpeg, detect cuts, run CPU Silero and validate playable generated creatives. Browser verification uses the actual accepted manifest, actual served MP4s and a genuine ad-ended event. It writes `browser-evidence.json` and `player.png` next to the manifest. Without `INTERLUDE_MANIFEST`, that browser test is skipped, not claimed passed.
-
-## Architecture and limits
-
-See [architecture](docs/ARCHITECTURE.md), [ADRs](docs/DECISIONS.md), and [execution evidence](docs/VERIFICATION.md). The canonical decisions drive both JSON and playback. No ad times are hard-coded. Model confidence and lexical safety mapping are conservative safeguards, not a guarantee of perfect scene understanding.
-
-The default duration cap remains 300 seconds; full-episode chunking and multi-user authentication remain limitations. Phase 2 includes independent worker heartbeats, VMAP and explicit retention cleanup. UI/visual design is reserved for Phase 3. See [Phase 2 architecture and controls](docs/PHASE2.md).
-
-## Phase 2 evaluation and cleanup
+For a real completed episode with an accepted break, browser verification exercises the actual MP4 lead-in, ad playback and resume path:
 
 ```bash
-uv run python -m interlude.evaluate data/samples/indubala_120s.mp4 data/samples/bhojon_bilashi_120s.mp4 --report-dir reports/local
-# Full episode inputs are excerpted; selection is recorded in the report.
-uv run python -m interlude.evaluate content-sample-assets-folder/indubala_bhaater_hotel.mp4 --clip-start 120 --clip-duration 120
-# Dry-run by default; --apply explicitly deletes only expired eligible media.
-uv run python -m interlude.cleanup
+uv run python scripts/browser_verify.py --manifest /absolute/path/to/analysis.json
 ```
 
-Each accepted breakpoint generates a ±10-second review clip under `reports/inspection/`. Zero-ad runs produce no review clips. Evaluation counts automated policy violations; human ground-truth accuracy requires separate annotation. New safety, memory, ranking, cache and retention settings are listed in `.env.example`.
+See [Phase 3 deployment and operations](docs/PHASE3.md), [Phase 3 verification](docs/PHASE3-VERIFICATION.md), [placement calibration](docs/PLACEMENT-CALIBRATION.md), [Phase 2 policy](docs/PHASE2.md) and the [architecture record](docs/ARCHITECTURE.md) for deeper evidence and design decisions.
+
+## Scope and limits
+
+Interlude is one shared workspace, not a multi-tenant ad platform. It uses hosted ASR and Qwen, an existing MySQL database, a CPU worker and local/volume-backed media storage. Model interpretation is probabilistic, and the safety checks are conservative safeguards rather than a guarantee for every unseen episode. Full episode jobs need enough disk, CPU time and external provider quota. Public deployment needs an HTTPS reverse proxy and the production session settings described in [docs/PHASE3.md](docs/PHASE3.md).
