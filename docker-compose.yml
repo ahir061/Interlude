@@ -38,13 +38,12 @@ services:
         condition: service_completed_successfully
   gateway:
     image: nginxinc/nginx-unprivileged:1.28-alpine
-    ports: ["127.0.0.1:8080:8080"]
+    ports: ["127.0.0.1:8080:8080", "127.0.0.1:3000:8080"]
     volumes: ["./deploy/nginx.conf:/etc/nginx/conf.d/default.conf:ro"]
     depends_on: [api, web]
     restart: unless-stopped
   web:
     build: ./apps/web
-    ports: ["127.0.0.1:3000:3000"]
     init: true
     restart: unless-stopped
     healthcheck:
